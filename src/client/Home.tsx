@@ -319,8 +319,8 @@ function ShopPage() {
                 </span>
               }
             />
-            {/* Photos drift left to right on their own; drag to look around, or pause. */}
-            <Marquee label="Gallery" className="looks" direction="right" paused={galleryPaused}>
+            {/* Photos drift left to right round a curved band; drag to look around, or pause. */}
+            <Marquee label="Gallery" className="looks" direction="right" paused={galleryPaused} curved>
               {CATEGORIES.map((c, i) => (
                 <Link key={c.id} to={`/explore?category=${c.id}`} className="look-card" aria-label={c.label} draggable={false}>
                   <Photo tone={CATEGORY_TONES[i % CATEGORY_TONES.length] ?? "sky"} src={CATEGORY_PHOTOS[c.id]} alt={`${c.label} at ${SHOP.name}`} sizes="(min-width: 810px) 240px, 150px" ratio="3 / 4" radius="var(--r-img)" markSize={56}>
