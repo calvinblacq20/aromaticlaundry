@@ -691,3 +691,11 @@ a.adm-row:hover, button.adm-row:hover { background: var(--ground); }
 .checkin-photo .icon-btn { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; }
 .checkin-photo.is-add { cursor: pointer; color: var(--ink-75); gap: 2px; align-content: center; }
 .checkin-photo.is-add:hover { background: var(--ink-06); }
+
+/* What's in the basket on the order page: the client's list against the counter's count. */
+.piece-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.piece-table th { padding: 6px 8px; font-size: 12px; font-weight: 500; color: var(--ink-75); text-align: left; border-bottom: 1px solid var(--ink-12); }
+.piece-table th + th, .piece-table td + td { width: 76px; text-align: right; }
+.piece-table td { padding: 8px; border-bottom: 1px solid var(--ink-06); }
+.piece-table tr.is-off td { background: var(--gold-wash); font-weight: 500; }
+.piece-table-warn { color: var(--warning-ink); }

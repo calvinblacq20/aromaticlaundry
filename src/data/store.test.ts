@@ -70,6 +70,22 @@ describe("guest booking", () => {
     expect(data.counters.order).toBe(before + 1);
   });
 
+  it("keeps the client's list of what's in the basket, tidied, and nothing when they skip it", () => {
+    const { order } = placed({
+      contents: [
+        { name: " Shirt ", qty: 4 },
+        { name: "shirt", qty: 1 },
+        { name: "Towel", qty: 0 },
+        { name: "Agbada", qty: 2 },
+      ],
+    });
+    expect(order.contents).toEqual([
+      { name: "Shirt", qty: 5 },
+      { name: "Agbada", qty: 2 },
+    ]);
+    expect(placed().order.contents).toBeUndefined();
+  });
+
   it("drops the zone and windows when the client brings it in and collects", () => {
     const { order } = placed({ intake: "dropoff", handback: "collect", deliveryStart: undefined, riderFee: 0, total: 120 });
     expect(order.zoneId).toBeUndefined();

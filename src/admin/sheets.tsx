@@ -1,13 +1,15 @@
 import { Camera, Copy, MessageCircle, X } from "lucide-react";
 import { useEffect, useId, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "../components/Button";
+import { GarmentPicker } from "../components/GarmentPicker";
 import { useNotify } from "../components/Notify";
 import { Sheet } from "../components/Sheet";
 import { shop } from "../data/store";
 import { careSummary, serviceById } from "../data/catalog";
-import type { Customer, Order, OrderStatus, PaymentMethod } from "../data/types";
+import type { BasketPiece, Customer, Order, OrderStatus, PaymentMethod } from "../data/types";
+import { pieceTotal, piecesSummary } from "../lib/basket";
 import { whatsappLink } from "../lib/contact";
-import { money } from "../lib/format";
+import { money, plural } from "../lib/format";
 import { balanceDue, paidTotal, stageLabel, stagesFor } from "../lib/orders";
 import { OWNER_STAGE_LABEL, orderTitle, updateMessage } from "../lib/shop";
 
@@ -161,20 +163,26 @@ export function CheckInSheet({ order, customer, open, onClose, onDone }: { order
   const baskets = order.items.reduce((n, i) => (serviceById(i.serviceId)?.category === "baskets" ? n + i.qty : n), 0);
   const pieces = order.items.reduce((n, i) => (serviceById(i.serviceId)?.category === "baskets" ? n : n + i.qty), 0);
   const [count, setCount] = useState("");
+  // Piece by piece: on from the start when the client listed what's in the basket, starting from their list.
+  const [itemise, setItemise] = useState(false);
+  const [garments, setGarments] = useState<BasketPiece[]>([]);
   const [notes, setNotes] = useState("");
   const [total, setTotal] = useState(String(order.total));
   const [photos, setPhotos] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const quoted = order.items.filter((i) => serviceById(i.serviceId)?.kind === "quote" && i.unitPrice === 0);
+  const itemised = itemise && pieceTotal(garments) > 0;
 
   useEffect(() => {
     if (!open) return;
     setCount("");
+    setItemise(Boolean(order.contents?.length));
+    setGarments(order.contents ?? []);
     setNotes("");
     setTotal(String(order.total));
     setPhotos([]);
     setError(null);
-  }, [open, order.total]);
+  }, [open, order.total, order.contents]);
 
   const addPhotos = async (files: FileList | null) => {
     if (!files) return;
@@ -192,7 +200,13 @@ export function CheckInSheet({ order, customer, open, onClose, onDone }: { order
   const submit = (e: FormEvent) => {
     e.preventDefault();
     // An empty box is a mistake, not a free wash: NaN fails the store's total check.
-    const result = shop.checkIn(order.id, { count: Math.floor(Number(count)), notes, photos, total: total.trim() ? parseAmount(total) : Number.NaN });
+    const result = shop.checkIn(order.id, {
+      count: itemised ? pieceTotal(garments) : Math.floor(Number(count)),
+      contents: itemised ? garments : undefined,
+      notes,
+      photos,
+      total: total.trim() ? parseAmount(total) : Number.NaN,
+    });
     if ("error" in result) {
       setError(result.error);
       return;
@@ -216,10 +230,26 @@ export function CheckInSheet({ order, customer, open, onClose, onDone }: { order
           {order.care.notes ? `. ${order.care.notes}` : ""}
         </p>
         <div className="stack gap-8">
-          <label htmlFor={`${id}-count`} className="t-cap muted">
-            Garments counted
-          </label>
-          <input id={`${id}-count`} className="adm-input" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="e.g. 18" autoFocus aria-invalid={Boolean(error)} />
+          <div className="between">
+            <label htmlFor={itemise ? undefined : `${id}-count`} className="t-cap muted">
+              {itemise ? `Garments counted: ${pieceTotal(garments)}` : "Garments counted"}
+            </label>
+            <button type="button" className="link t-cap" onClick={() => setItemise(!itemise)}>
+              {itemise ? "Just the total" : "Count piece by piece"}
+            </button>
+          </div>
+          {itemise ? (
+            <>
+              {order.contents?.length ? (
+                <p className="t-cap muted">
+                  The client listed {piecesSummary(order.contents, 3)} ({plural(pieceTotal(order.contents), "piece")}). Correct it to what's in the bag.
+                </p>
+              ) : null}
+              <GarmentPicker value={garments} onChange={setGarments} tally="counted" />
+            </>
+          ) : (
+            <input id={`${id}-count`} className="adm-input" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="e.g. 18" autoFocus aria-invalid={Boolean(error)} />
+          )}
         </div>
         <div className="stack gap-8">
           <label htmlFor={`${id}-notes`} className="t-cap muted">

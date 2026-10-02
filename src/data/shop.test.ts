@@ -93,6 +93,24 @@ describe("the counter", () => {
     if (booked.pickupId) expect(getAppData().appointments.find((a) => a.id === booked.pickupId)?.status).toBe("done");
   });
 
+  it("counts piece by piece when the counter itemises the bag: the list sets the count", () => {
+    const booked = find((o) => o.status === "booked", "booked order");
+    expect(shop.checkIn(booked.id, { count: 0, contents: [{ name: "Shirt", qty: 0 }] }, now)).toEqual({ error: "Count the garments: between 1 and 500." });
+    const counted = [
+      { name: "Shirt", qty: 6 },
+      { name: "Trousers", qty: 3 },
+      { name: " shirt", qty: 1 },
+    ];
+    const { order } = ok(shop.checkIn(booked.id, { count: 99, contents: counted }, now));
+    expect(order.checkIn).toMatchObject({
+      count: 10,
+      contents: [
+        { name: "Shirt", qty: 7 },
+        { name: "Trousers", qty: 3 },
+      ],
+    });
+  });
+
   it("rejects a blank total instead of washing it for free", () => {
     const booked = find((o) => o.status === "booked", "booked order");
     expect(shop.checkIn(booked.id, { count: 8, total: Number.NaN }, now)).toEqual({ error: "Enter a total between GH₵ 0 and GH₵ 100,000." });

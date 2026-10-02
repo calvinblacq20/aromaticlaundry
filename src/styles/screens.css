@@ -296,6 +296,24 @@
 /* 16px keeps iOS Safari from zooming the page when the field is tapped. */
 .qty input { width: 44px; height: 34px; border: 0; background: transparent; text-align: center; font-variant-numeric: tabular-nums; font-weight: 500; font-size: 16px; -moz-appearance: textfield; }
 .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+/* Basket contents (GarmentPicker): one row per garment, counted ones lifted out in gold. */
+.garments { display: flex; flex-direction: column; gap: 12px; }
+.garment-list { display: flex; flex-direction: column; }
+.garment { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 4px 6px 12px; border-radius: var(--r-12); font-size: 15px; transition: background-color 0.15s; }
+.garment + .garment { border-top: 1px solid var(--ink-06); }
+.garment.is-on { background: var(--gold-wash); font-weight: 500; }
+.garment.is-on + .garment, .garment + .garment.is-on { border-top-color: transparent; }
+.garment .qty button:disabled { opacity: 0.35; cursor: default; }
+.garment-count { width: 32px; text-align: center; font-weight: 500; font-size: 16px; }
+.garment-add { display: flex; gap: 8px; align-items: center; }
+/* 16px keeps iOS Safari from zooming on focus. */
+.garment-add input { flex: 1; min-width: 0; height: 44px; padding: 0 14px; border: 1px solid var(--ink-12); border-radius: var(--r-12); background: var(--surface); font-size: 16px; }
+.garment-add input:focus { outline: none; border-color: var(--ink); }
+.garment-add .btn { height: 44px; }
+.garments-total { font-size: 13px; font-weight: 500; color: var(--ink-75); }
+/* The "What's in the basket?" card under the basket choices in the booking flow. */
+.basket-contents { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 14px 16px; text-align: left; cursor: pointer; }
+.basket-contents-warn { color: var(--warning-ink); }
 .option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .option {
   display: flex;

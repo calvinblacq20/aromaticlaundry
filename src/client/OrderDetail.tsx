@@ -1,4 +1,4 @@
-import { ArrowLeft, Ban, Bike, CalendarPlus, Check, ChevronRight, CircleAlert, ClipboardCheck, Droplet, Lock, MessageCircle, Navigation, Phone, ReceiptText, RefreshCw, ShoppingBag, Store, Truck } from "lucide-react";
+import { ArrowLeft, Ban, Bike, CalendarPlus, Check, ChevronRight, CircleAlert, ClipboardCheck, Droplet, ListChecks, Lock, MessageCircle, Navigation, Phone, ReceiptText, RefreshCw, ShoppingBag, Store, Truck } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -21,6 +21,7 @@ import { splitName } from "../lib/auth";
 import { amountDue, canViewOrder } from "../lib/checkout";
 import { formatGhPhone, mapsLinks, telLink, whatsappLink } from "../lib/contact";
 import { fmtDate, fmtDay, fmtDayShort, fmtTime, money, parseLocal, plural } from "../lib/format";
+import { pieceTotal, piecesSummary } from "../lib/basket";
 import { itemSummary } from "../lib/items";
 import { adjustmentLabel, badgeFor, balanceDue, canCancel, counterAdjustment, isActive, nextAction, paidTotal, stageIndex, stageLabel, stagesFor, titleFor } from "../lib/orders";
 import { windowLabel } from "../lib/schedule";
@@ -447,6 +448,23 @@ function OrderView({ order }: { order: Order }) {
                 {order.care.notes && <span className="subtle t-cap">{order.care.notes}</span>}
               </span>
             </div>
+            {(order.checkIn?.contents ?? order.contents) && (
+              <div className="row">
+                <span className="row-icon">
+                  <ListChecks size={18} strokeWidth={1.7} />
+                </span>
+                <span className="grow stack">
+                  <span>In the basket: {piecesSummary(order.checkIn?.contents ?? order.contents, 6)}</span>
+                  <span className="subtle t-cap">
+                    {order.checkIn?.contents
+                      ? order.contents && pieceTotal(order.contents) !== order.checkIn.count
+                        ? `Counted at the counter: ${plural(order.checkIn.count, "piece")}. You listed ${pieceTotal(order.contents)}; message us if that's not right.`
+                        : `Counted at the counter: ${plural(order.checkIn.count, "piece")}.`
+                      : `You listed ${plural(pieceTotal(order.contents), "piece")}. We count them again when the bag is opened.`}
+                  </span>
+                </span>
+              </div>
+            )}
             {order.checkIn && (
               <div className="row">
                 <span className="row-icon is-aqua">

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { cleanPieces, pieceTotal } from "../lib/basket";
 import { checkCode, CODE_TTL_MS, findOrder, paymentKindFor, paystackReference, samePhone, upsertCustomer, type Access, type CodeCheck, type PendingCode } from "../lib/checkout";
 import { dayKey, localIso, money, parseLocal } from "../lib/format";
 import { orderNumber, receiptNumber } from "../lib/receipts";
@@ -14,6 +15,7 @@ import { applyExpenseCategories } from "./expenses";
 import { createSeed, type AppData } from "./seed";
 import type {
   Appointment,
+  BasketPiece,
   CarePrefs,
   CheckIn,
   ContactDetails,
@@ -216,6 +218,8 @@ export interface OrderDraft {
   /** Start of the delivery window, when the rider brings it back. */
   deliveryStart?: string;
   comments?: string;
+  /** What the client listed in the basket, if they did. */
+  contents?: BasketPiece[];
   /** Keep these care choices on the account for next time. */
   saveCare: boolean;
   contact: ContactDetails;
@@ -282,6 +286,7 @@ export const actions = {
       pickupId,
       deliveryId,
       comments: draft.comments?.trim() || undefined,
+      contents: cleanPieces(draft.contents),
       status: "booked",
       history: [{ status: "booked", at: createdAt }],
       total: draft.total,
@@ -537,7 +542,9 @@ export interface CounterPayment {
 }
 
 export interface CheckInDraft {
+  /** Ignored when `contents` is itemised: the count is then its total. */
   count: number;
+  contents?: BasketPiece[];
   notes?: string;
   photos?: string[];
   /** The total once the counter has seen the load: a basket that's bigger than booked, a gown priced. */
@@ -554,7 +561,8 @@ export interface WalkInOrder {
   handback: Handback;
   zoneId?: string;
   deliveryStart?: string;
-  checkIn: { count: number; notes?: string };
+  /** As at check-in: itemised `contents`, when given, set the count. */
+  checkIn: { count: number; notes?: string; contents?: BasketPiece[] };
   /** The price agreed at the counter. */
   total: number;
   riderFee: number;
@@ -603,13 +611,15 @@ export const shop = {
     const order = findOrderById(orderId);
     if (!order) return { error: "We couldn't find that order." };
     if (order.status !== "booked") return { error: "This order is already checked in." };
-    if (!Number.isInteger(draft.count) || draft.count < 1 || draft.count > 500) return { error: "Count the garments: between 1 and 500." };
+    const contents = cleanPieces(draft.contents);
+    const count = contents ? pieceTotal(contents) : draft.count;
+    if (!Number.isInteger(count) || count < 1 || count > 500) return { error: "Count the garments: between 1 and 500." };
     if ((draft.notes ?? "").length > 500) return { error: "Keep the notes under 500 characters." };
     const total = draft.total ?? order.total;
     if (!Number.isFinite(total) || total < 0 || total > 100_000) return { error: "Enter a total between GH₵ 0 and GH₵ 100,000." };
     const paid = order.total - balanceDue(order);
     if (total < paid) return { error: "The total can't be less than what's already paid." };
-    const checkIn: CheckIn = { count: draft.count, notes: draft.notes?.trim() || undefined, photos: draft.photos?.slice(0, MAX_PHOTOS), at: now.toISOString() };
+    const checkIn: CheckIn = { count, contents, notes: draft.notes?.trim() || undefined, photos: draft.photos?.slice(0, MAX_PHOTOS), at: now.toISOString() };
     // The promise starts when the clothes reach the counter, not when the order was booked.
     const readyAt = localIso(readyTime(now, turnaroundHours(order.items), order.speed === "express", RULES.expressHours, HOURS));
     const next = withStatus({ ...order, checkIn, total, readyAt }, "received", now);
@@ -824,7 +834,10 @@ export const shop = {
     const items = draft.items.filter((i) => i.qty > 0);
     if (!items.length) return { error: "Add at least one service." };
     if (!Number.isFinite(draft.total) || draft.total < 0) return { error: "Enter the agreed price." };
-    if (!Number.isInteger(draft.checkIn.count) || draft.checkIn.count < 1) return { error: "Count the garments before checking in." };
+    const counted = cleanPieces(draft.checkIn.contents);
+    const count = counted ? pieceTotal(counted) : draft.checkIn.count;
+    if (!Number.isInteger(count) || count < 1) return { error: "Count the garments before checking in." };
+    if (count > 500) return { error: "Count the garments: between 1 and 500." };
     if (draft.handback === "delivery" && !draft.zoneId) return { error: "Choose the delivery area." };
 
     let subscriptionId: string | undefined;
@@ -859,7 +872,7 @@ export const shop = {
       readyAt,
       deliveryId,
       comments: draft.comments?.trim() || undefined,
-      checkIn: { count: draft.checkIn.count, notes: draft.checkIn.notes?.trim() || undefined, at: createdAt },
+      checkIn: { count, contents: counted, notes: draft.checkIn.notes?.trim() || undefined, at: createdAt },
       status: "received",
       history: [
         { status: "booked", at: createdAt },

@@ -1,4 +1,4 @@
-import { Ban, Bike, Check, ChevronRight, CircleAlert, ClipboardCheck, Droplet, ListOrdered, MessageCircle, NotebookPen, Phone, Printer, ReceiptText, Share2, Truck, Wallet, Zap } from "lucide-react";
+import { Ban, Bike, Check, ChevronRight, CircleAlert, ClipboardCheck, Droplet, ListChecks, ListOrdered, MessageCircle, NotebookPen, Phone, Printer, ReceiptText, Share2, Truck, Wallet, Zap } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -9,7 +9,8 @@ import { orderSubject, ReceiptDoc, receiptShareText } from "../../components/Rec
 import { SHOP, zoneById } from "../../data/business";
 import { careSummary, serviceById } from "../../data/catalog";
 import { customerById, useAppData } from "../../data/store";
-import type { Order } from "../../data/types";
+import type { BasketPiece, Order } from "../../data/types";
+import { comparePieces } from "../../lib/basket";
 import { telLink, formatGhPhone, whatsappLink } from "../../lib/contact";
 import { fmtDate, fmtDay, fmtDayShort, fmtTime, money, parseLocal, plural, relativeDay } from "../../lib/format";
 import { itemSummary } from "../../lib/items";
@@ -367,6 +368,7 @@ function OrderView({ order }: { order: Order }) {
                   {order.care.notes ? `. ${order.care.notes}` : ""}
                 </p>
               </div>
+              <BasketList listed={order.contents} counted={order.checkIn?.contents} />
               {order.checkIn ? (
                 <div className="stack gap-8">
                   <span className="inline t-cap muted" style={{ gap: 6 }}>
@@ -417,6 +419,44 @@ function OrderView({ order }: { order: Order }) {
       </div>
       {actions.sheets}
     </AdminPage>
+  );
+}
+
+/** What's in the basket: the client's list, the counter's count, or both side by side with the differences marked. */
+function BasketList({ listed, counted }: { listed?: BasketPiece[]; counted?: BasketPiece[] }) {
+  if (!listed?.length && !counted?.length) return null;
+  const rows = comparePieces(listed, counted);
+  const both = Boolean(listed?.length && counted?.length);
+  const off = both ? rows.filter((r) => r.listed !== r.counted).length : 0;
+  return (
+    <div className="stack gap-8">
+      <span className="inline t-cap muted" style={{ gap: 6 }}>
+        <ListChecks size={14} /> {both ? "In the basket" : counted?.length ? "Counted at the counter" : "In the basket, as the client listed it"}
+      </span>
+      <table className="piece-table">
+        <thead>
+          <tr>
+            <th scope="col">Garment</th>
+            {listed?.length ? <th scope="col">Listed</th> : null}
+            {counted?.length ? <th scope="col">Counted</th> : null}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.name} className={both && row.listed !== row.counted ? "is-off" : undefined}>
+              <td>{row.name}</td>
+              {listed?.length ? <td className="tabular">{row.listed}</td> : null}
+              {counted?.length ? <td className="tabular">{row.counted}</td> : null}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {off > 0 && (
+        <p className="t-cap piece-table-warn">
+          {off === 1 ? "One garment differs" : `${off} garments differ`} from the client's list. Tell them in the WhatsApp update.
+        </p>
+      )}
+    </div>
   );
 }
 

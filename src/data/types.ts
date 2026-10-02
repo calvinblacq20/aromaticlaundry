@@ -102,10 +102,18 @@ export interface Payment {
   payer?: string;
 }
 
+/** One kind of garment in a basket: "Shirt × 4". Free text, so anything can be listed. */
+export interface BasketPiece {
+  name: string;
+  qty: number;
+}
+
 /** What the counter writes down when the bag is opened: the defence against "you lost my shirt". */
 export interface CheckIn {
-  /** Garments counted at the counter. */
+  /** Garments counted at the counter. When they're itemised, this is the total of `contents`. */
   count: number;
+  /** The count garment by garment, when the counter itemised it. */
+  contents?: BasketPiece[];
   /** Stains, damage, missing buttons, things left in pockets. */
   notes?: string;
   /** Small photos taken at the counter (data URLs, downsized). */
@@ -133,6 +141,8 @@ export interface Order {
   pickupId?: ID;
   deliveryId?: ID;
   comments?: string;
+  /** What the client listed in the basket when booking (optional); the counter's own count is on `checkIn`. */
+  contents?: BasketPiece[];
   checkIn?: CheckIn;
   status: OrderStatus;
   history: StatusEvent[];

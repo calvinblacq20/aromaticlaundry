@@ -1,4 +1,4 @@
-import { ArrowUp, Bike, CalendarSync, Check, Clock, Droplet, Lock, Mail, MapPin, Minus, Phone, Plus, Send, Shirt, Sparkles, Store, Trash2, Truck, UserRound, Wallet, Zap } from "lucide-react";
+import { ArrowUp, Bike, CalendarSync, Check, Clock, Droplet, ListChecks, Lock, Mail, MapPin, Minus, Phone, Plus, Send, Shirt, Sparkles, Store, Trash2, Truck, UserRound, Wallet, Zap } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useState, type InputHTMLAttributes, type ReactNode } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -11,12 +11,14 @@ import { useNotify } from "../components/Notify";
 import { SuccessScreen } from "../components/Overlays";
 import { PaystackSheet } from "../components/Paystack";
 import { useScrollTo } from "../components/Scroll";
+import { GarmentPicker } from "../components/GarmentPicker";
 import { DateStrip } from "../components/Pickers";
 import { Sheet } from "../components/Sheet";
 import { HOURS, POLICIES, RULES, SHOP, ZONES, zoneById } from "../data/business";
-import { CATEGORIES, DEFAULT_CARE, FINISH_OPTIONS, SCENT_OPTIONS, SERVICES, STARCH_OPTIONS, careSummary, serviceById } from "../data/catalog";
+import { CATEGORIES, DEFAULT_CARE, FINISH_OPTIONS, SCENT_OPTIONS, SERVICES, STARCH_OPTIONS, careSummary, isBasket, serviceById } from "../data/catalog";
 import { accountOf, accountPlanOf, actions, useAppData, type OnlinePayment } from "../data/store";
-import type { CarePrefs, ContactDetails, Handback, Intake, OrderStatus, PayChoice, Service, Speed } from "../data/types";
+import type { BasketPiece, CarePrefs, ContactDetails, Handback, Intake, OrderStatus, PayChoice, Service, Speed } from "../data/types";
+import { overCapacity, pieceTotal, piecesSummary } from "../lib/basket";
 import { cleanContact, contactFromCustomer, EMPTY_CONTACT, validateContact, type ContactErrors } from "../lib/checkout";
 import { dayKey, fmtDayLong, fmtDayShort, fmtTime, localIso, money, parseLocal, plural } from "../lib/format";
 import { itemSummary, serviceLine, servicePrice } from "../lib/items";
@@ -63,6 +65,7 @@ export function OrderFlow() {
   const [inAt, setInAt] = useState<string | null>(null);
   const [deliveryStart, setDeliveryStart] = useState<string | null>(null);
   const [comments, setComments] = useState("");
+  const [contents, setContents] = useState<BasketPiece[]>([]);
   const [usePoints, setUsePoints] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [created, setCreated] = useState<{ id: string; number: string; status: OrderStatus; intake: Intake; inAt: string; receiptNo?: string; email: string } | null>(null);
@@ -87,6 +90,7 @@ export function OrderFlow() {
   const expressOk = canExpress(lines);
   const effectiveSpeed: Speed = expressOk ? speed : "standard";
   const hasBaskets = priced.some((l) => l.service?.category === "baskets");
+  const listed = hasBaskets ? contents : [];
   const planUsable = Boolean(plan && plan.left > 0 && hasBaskets);
   const pay: PayChoice = payChoice === "plan" && !planUsable ? "later" : payChoice ?? (planUsable ? "plan" : "later");
   const trips = riderTrips(intake, handback);
@@ -143,6 +147,7 @@ export function OrderFlow() {
       readyAt: localIso(readyAt),
       deliveryStart: handback === "delivery" ? deliveryStart ?? undefined : undefined,
       comments: comments.trim() || undefined,
+      contents: listed.length ? listed : undefined,
       saveCare: account ? saveCare : true,
       contact: clean,
       remember: account ? false : remember,
@@ -247,7 +252,7 @@ export function OrderFlow() {
 
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={step} initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -28 }} transition={spring.small} className="stack" style={{ flex: 1 }}>
-              {step === 0 && <ChooseItems lines={lines} onToggle={toggleLine} onQty={(id, qty) => updateLine(id, { qty })} planLeft={plan?.left} />}
+              {step === 0 && <ChooseItems lines={lines} onToggle={toggleLine} onQty={(id, qty) => updateLine(id, { qty })} planLeft={plan?.left} contents={contents} onContents={setContents} />}
               {step === 1 && (
                 <CareAndSpeed
                   lines={priced}
@@ -301,6 +306,7 @@ export function OrderFlow() {
               {step === REVIEW_STEP && (
                 <Review
                   lines={priced}
+                  contents={listed}
                   expressFee={est.expressFee}
                   riderFee={est.riderFee}
                   trips={trips}
@@ -473,7 +479,21 @@ export function OrderFlow() {
 
 /* ---------------- Step 1: services ---------------- */
 
-function ChooseItems({ lines, onToggle, onQty, planLeft }: { lines: Draft[]; onToggle: (service: Service) => void; onQty: (id: string, qty: number) => void; planLeft?: number }) {
+function ChooseItems({
+  lines,
+  onToggle,
+  onQty,
+  planLeft,
+  contents,
+  onContents,
+}: {
+  lines: Draft[];
+  onToggle: (service: Service) => void;
+  onQty: (id: string, qty: number) => void;
+  planLeft?: number;
+  contents: BasketPiece[];
+  onContents: (next: BasketPiece[]) => void;
+}) {
   const loading = useSkeleton(450);
   const [showPill, setShowPill] = useState(false);
   const scrollTo = useScrollTo();
@@ -593,12 +613,49 @@ function ChooseItems({ lines, onToggle, onQty, planLeft }: { lines: Draft[]; onT
                 );
               })}
             </div>
+            {c.id === "baskets" && <BasketContents lines={lines} value={contents} onChange={onContents} />}
           </section>
         );
       })}
       <p className="t-cap subtle" style={{ textAlign: "center", marginTop: 20 }}>
         Basket prices from our price list. Not sure which basket? Pick the closest: we confirm the size at the counter before anything is charged.
       </p>
+    </>
+  );
+}
+
+/** "What's in the basket?": optional, so the counter can count it back. The list opens in a sheet. */
+function BasketContents({ lines, value, onChange }: { lines: Draft[]; value: BasketPiece[]; onChange: (next: BasketPiece[]) => void }) {
+  const [open, setOpen] = useState(false);
+  const baskets = lines.flatMap((line) => {
+    const service = serviceById(line.serviceId);
+    return service && isBasket(service) ? [{ capacity: service.capacity, qty: line.qty }] : [];
+  });
+  if (!baskets.length) return null;
+  const total = pieceTotal(value);
+  const tooMany = overCapacity(value, baskets);
+  return (
+    <>
+      <button type="button" className="card basket-contents" onClick={() => setOpen(true)}>
+        <span className="row-icon is-aqua">
+          <ListChecks size={18} strokeWidth={1.7} />
+        </span>
+        <span className="grow stack gap-4">
+          <span className="t-title">{total ? "What's in the basket" : "What's in the basket? (optional)"}</span>
+          <span className="muted t-cap">{total ? `${piecesSummary(value)} · ${plural(total, "piece")}` : "List the clothes and we'll count them back to you when the bag is opened."}</span>
+          {tooMany && <span className="t-cap basket-contents-warn">That's more than this basket usually holds. Add a bigger one, or we'll confirm the size at the counter.</span>}
+        </span>
+        <span className="link t-cap">{total ? "Edit" : "Add"}</span>
+      </button>
+      <Sheet open={open} onClose={() => setOpen(false)} title="What's in the basket?">
+        <div className="stack gap-16">
+          <p className="muted">Tap + for each piece. We count them again when the bag is opened and send you the count, so nothing goes missing.</p>
+          <GarmentPicker value={value} onChange={onChange} />
+          <Button variant="dark" block onClick={() => setOpen(false)}>
+            Done
+          </Button>
+        </div>
+      </Sheet>
     </>
   );
 }
@@ -992,6 +1049,7 @@ function YourDetails({ contact, setContact, errors, needsAddress, accountName, r
 
 interface ReviewProps {
   lines: PricedLine[];
+  contents: BasketPiece[];
   expressFee: number;
   riderFee: number;
   trips: number;
@@ -1071,6 +1129,14 @@ function Review(r: ReviewProps) {
           <Droplet size={16} />
           <span>{careSummary(r.care)}</span>
         </p>
+        {r.contents.length > 0 && (
+          <p className="info-line">
+            <ListChecks size={16} />
+            <span>
+              In the basket: {piecesSummary(r.contents, 4)} · {plural(pieceTotal(r.contents), "piece")}
+            </span>
+          </p>
+        )}
         <div className="divider" style={{ margin: 0 }} />
         {r.lines.map((line) => (
           <div key={line.serviceId} className="kv">
