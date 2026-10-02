@@ -1,5 +1,5 @@
 /* ---------- Editorial hero (home) ----------
- * The Queens Wigs & Bundles hero (src/client/home/editorialHero.ts drives it). Title + copy sit in
+ * The Queens Wigs & Bundles hero (src/client/home/heroSlideshow.ts drives it). Title + copy sit in
  * one centred column, so they can never collide. The title is sized by BOTH the hero's width and
  * the screen height, and the portrait frame is centred behind it. --chrome-h is the screen height
  * the hero leaves for everything else: on phones the "Book now" bar and tab bar at the bottom, less

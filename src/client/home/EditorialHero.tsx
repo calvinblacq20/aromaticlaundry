@@ -7,7 +7,7 @@ import { RULES, SHOP } from "../../data/business";
 import { SERVICES } from "../../data/catalog";
 import { money } from "../../lib/format";
 import { motionMode } from "../../motion";
-import { initHero } from "./editorialHero";
+import { initHero } from "./heroSlideshow";
 
 type Look = "light" | "ghost" | "solid";
 type Action = { label: string; look: Look } & ({ to: string } | { prices: true });
@@ -90,7 +90,7 @@ const SLIDES: Slide[] = [
 /**
  * The home page's opening slideshow, in the editorial style of the Queens Wigs & Bundles build:
  * the shop's name across the top, a portrait photo behind a big two-line title, and slides that
- * switch on their own (see ./editorialHero.ts). GSAP owns this markup once it mounts, so the
+ * switch on their own (see ./heroSlideshow.ts). GSAP owns this markup once it mounts, so the
  * component is memoised and takes only a stable callback; it never re-renders.
  */
 export const EditorialHero = memo(function EditorialHero({ onSeePrices }: { onSeePrices: () => void }) {
