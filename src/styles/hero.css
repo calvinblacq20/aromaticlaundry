@@ -162,6 +162,10 @@
   padding-inline: var(--hero-gutter);
   font-family: var(--hero-serif);
   font-weight: 400;
+  /* Bodoni's optical sizes run to 96, where the hairlines all but vanish over a photo at this size.
+     Pinned to a text-leaning cut so the thin strokes of the A, N and the italic still read. */
+  font-optical-sizing: none;
+  font-variation-settings: "opsz" 28;
   font-size: clamp(52px, min(15.5vw, calc((100 * var(--vh) - var(--chrome-h) - 290px) / 1.75)), 250px);
   line-height: 0.84;
   letter-spacing: -0.035em;

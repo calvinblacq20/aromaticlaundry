@@ -719,7 +719,7 @@ button.row:active, a.row:active { background: var(--ink-06); }
 .map-pin { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25)); }
 .map-pin-stem { width: 2px; height: 10px; background: #fff; }
 /* The mall photo is CC BY-SA, so its credit sits on the photo itself. */
-.map-credit { position: absolute; right: 8px; bottom: 6px; padding: 1px 6px; border-radius: var(--r-pill); font-size: 10px; color: #fff; background: rgba(0, 0, 0, 0.45); }
+.map-credit { position: absolute; right: 8px; bottom: 6px; padding: 1px 6px; border-radius: var(--r-pill); font-size: 10px; color: #fff; background: rgba(0, 0, 0, 0.62); }
 
 /* ---------- Avatars ---------- */
 .avatar {

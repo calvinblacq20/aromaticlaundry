@@ -44,7 +44,8 @@
   /* Semantic, used only for state. */
   /* 5.9:1 on the ground, so "Open now" passes AA at 12px. */
   --open: #1b6b3f;
-  --danger: #c8412b;
+  /* 5.4:1 on white, 5:1 on the ground: danger links and white text on danger buttons both pass. */
+  --danger: #b83a26;
   --danger-wash: #fbe7e2;
   --warning-ink: #8a4b1f;
 

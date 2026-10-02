@@ -150,8 +150,9 @@
   color: var(--ink);
 }
 .bento-card.is-tall { min-height: 400px; }
-.bento-card.is-steel { background: linear-gradient(180deg, #5d7590 0%, #93a4bd 50%, #e7ecf3 100%); }
-.bento-card.is-steel-rev { background: linear-gradient(180deg, #e7ecf3 0%, #93a4bd 55%, #5d7590 100%); }
+/* Steel cards start from navy where their white heads sit (8:1 or better behind the copy). */
+.bento-card.is-steel { background: linear-gradient(180deg, #16306e 0%, #4f6aa3 50%, #dfe6f2 100%); }
+.bento-card.is-steel-rev { background: linear-gradient(180deg, #dfe6f2 0%, #4f6aa3 55%, #16306e 100%); }
 .bento-card.is-white { background: linear-gradient(180deg, #ffffff 0%, #f2f4f8 100%); }
 .bento-card.is-blush { background: linear-gradient(180deg, #ffffff 0%, #fae9e6 100%); }
 .bento-card-head { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
@@ -309,6 +310,13 @@
   background: rgba(255, 255, 255, 0.95);
   color: var(--ink);
   box-shadow: var(--sh-float);
+  /* A light card inside the dark closing band: back to the deep label colours that read on white. */
+  --label-aqua: var(--royal);
+  --label-sand: var(--warning-ink);
+  --label-sky: #1a63a8;
+  --label-lilac: #5a3ec8;
+  --label-mist: #6b6470;
+  --label-danger: #b83a26;
   text-align: left;
 }
 .closing-chip.is-right { display: none; }
