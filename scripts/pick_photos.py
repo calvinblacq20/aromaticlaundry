@@ -41,7 +41,6 @@ class Pick:
 
 PICKS = [
     Pick("shop-front", "7646467377156148501", 14.0, top=0.12, bottom=0.78, ratio=4 / 5),
-    Pick("shop-sign", "7646467377156148501", 3.8, top=0.02, bottom=0.62, ratio=4 / 5),
     Pick("shop-counter", "7646781272475405589", 21.7, top=0.14, bottom=0.92, ratio=4 / 5),
     Pick("machines", "7646710010172476693", 12.6, top=0.2, bottom=0.9, ratio=4 / 5),
     Pick("folded-stack", "7648693722221169940", 24.5, top=0.28, bottom=0.8, right=0.7, ratio=4 / 5),
@@ -53,7 +52,6 @@ PICKS = [
     Pick("basket-small", "7680521068347493652", 2.8, top=0.3, bottom=0.98, ratio=4 / 5),
     Pick("bedding", "7660529234435280148", 8.8, top=0.3, bottom=0.98, ratio=4 / 5),
     Pick("gown", "7675311564437703957", 4.8, top=0.3, bottom=0.84, ratio=4 / 5),
-    Pick("sorting", "7655763678666542357", 2.8, top=0.22, bottom=0.98, ratio=4 / 5),
     Pick("handover", "7685908851903794452", 7.2, top=0.2, bottom=0.92, ratio=4 / 5),
     Pick("arrivals", "7679422683053821204", 6.9, top=0.12, bottom=0.9, ratio=4 / 5),
 ]
