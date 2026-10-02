@@ -1,21 +1,20 @@
 # Design reference: Makro (Framer template)
 
-> **Ruffles and Baked by H adaptation.** This reference came from the Franz Qlodin build by way of the Dough n Frost one, and this app reuses its layout, components and motion unchanged. What differs: the palette (wine-black ink `#2A141C` on ivory `#F7EFE9`, with wine `#7B0B33` as the brand and champagne gold `#E9C67E` as the one accent, called `gold` in code where the tailor build said `lime`; the pastel slots carry this studio's tones — see `src/styles/tokens.css`), the wide-brim hat mark (`src/components/Brand.tsx`), and the vocabulary:
+> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the system's ink `#242426` on cool grey `#EBEFF5`, with blue `#0A4FB4` from the shop's wordmark as the logo and solid buttons, and aqua `#7AD7F0` from its price list as the one accent, called `aqua` in code where the tailor build said `lime`; see `src/styles/tokens.css`), the washer mark (`src/components/Brand.tsx`), and the vocabulary:
 >
-> | Tailor build | Ruffles and Baked by H |
+> | Tailor build | Aromatic Laundry |
 > |---|---|
-> | Styles, catalogue | Menu items, the menu (plus the Classic Cake Menu grid) |
-> | One catalogue | Two lines: Baked by H (kitchen) and Ruffles by H (workroom) |
-> | Measurements, measuring visit | Dates to remember, allergies, head size; tasting or fitting |
-> | Fitting | Pickup or delivery slot — and a fitting, for hats and headbands |
-> | Deposit (50%) | Cakes: paid in full. Bespoke pieces: quote, then a 50% deposit |
-> | Cutting · Sewing · Fitting | Making · Finishing, worded per order (Baking/Decorating or Beading/Finishing) |
-> | Rush (+20%) | Late order (+GH₵ 50) |
-> | Workshop | Kitchen and workroom |
-> | TikTok | Instagram (two accounts) |
+> | Styles, catalogue | Services, the price list (baskets, ironing, suits & kente, bedding, stains) |
+> | Measurements, measuring visit | Care preferences (folded or hung, starch, scent); garment count at check-in |
+> | Fitting | Rider pickup and delivery windows (two hours, three runs each) |
+> | Deposit (50%) | Pay now, pay when it's done, or on the monthly plan |
+> | Cutting · Sewing · Fitting | Checked in · Washing · Ironing & folding |
+> | Rush (+20%) | Express: 3 open hours, +GH₵ 50 per order |
+> | Workshop | The floor (what's in the machines) |
+> | Instagram | TikTok |
 
 Source: https://makro.framer.website/, extracted 2026-09-14 from the live page's computed styles, embedded CSS and JS animation configs.
-Rule for this project: **match fonts, patterns and motion exactly; the palette is Ruffles and Baked by H's own (see the note above), and the content and screens are the studio's.**
+Rule for this project: **match fonts, patterns and motion exactly; the palette is Aromatic Laundry's own (see the note above), and the content and screens are the laundry's.**
 
 ---
 
@@ -132,6 +131,6 @@ Rule for this project: **match fonts, patterns and motion exactly; the palette i
 
 1. **Licence.** Makro is a paid or listed Framer template. Recreating its exact look in our own code for a client product needs the template's licence checked (or bought).
 2. **Havana font** is a Framer asset. Swap in a licensed or free equivalent unless we confirm we can use it.
-3. **Photos and logos** (hero portrait, team, testimonial logos) are the template's stock assets. Replaced with the studio's own photos from Instagram (@ruffles_byh and @bakedbyh_gh); see `docs/photo-sources.md`.
+3. **Photos and logos** (hero portrait, team, testimonial logos) are the template's stock assets. Replaced with stills from the shop's own TikTok videos (@aromatic.laundry1); see `docs/photo-sources.md`.
 4. **Performance.** On load, the Framer build keeps content invisible until its JavaScript runs (several seconds blank on a mobile load during testing). Our build keeps the same motion but shows content even before the animation plays. That matters on slow connections in Ghana. Every device gets the full motion, including phones that ask for reduced motion (iOS does in Low Power Mode); this was Calvin's call on 18 Sept 2026. `?motion=calm` or `?motion=off` turns it down for testing.
 5. **App vs. marketing page.** Smooth scrolling and pinned panels suit the client home page. Owner screens use the same tokens and springs, but ordinary scrolling.

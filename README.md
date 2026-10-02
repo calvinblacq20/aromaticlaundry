@@ -1,12 +1,24 @@
-# Ruffles and Baked by H: Studio App (demo)
+# Aromatic Laundry: Laundry App (demo)
 
-Ordering and workshop app for **Ruffles and Baked by H**, Hillary's studio in Kasoa. It runs two lines under one roof: **Ruffles by H**, bespoke handmade headpieces, hats, crowns, beaded headbands, brooches and the whole bridal set, and **Baked by H**, celebration cakes, kids' themed cakes, bento cakes and pastries.
+Booking and counter app for **Aromatic Laundry**, the laundry inside West Hills Mall, Weija (Accra–Kasoa road). It washes, dries, irons and folds by the basket, presses shirts and native wear by the piece, cleans suits, kente and gowns, does duvets and curtains, and treats stains before the wash. Open every day, 07:00–21:00.
 
-Clients browse both, build a cake from the studio's own Classic Cake Menu, ask for a quote on anything handmade, pick a pickup time or delivery window, pay with Mobile Money or card, track the order and keep official receipts. The owner runs the studio from `#/admin`: what to make today, orders (list and board), walk-in and WhatsApp orders, clients with allergies and head sizes, dates to remember and a private notebook, pickups and fittings, payments and receipts, reports, reviews, the menu and price list, and settings.
+Clients pick baskets and items from the shop's own price list, choose how they like it done (folded or on hangers, starch, scent), choose standard (24 hours) or express (3 hours), drop it at the counter or book the rider, pay with Mobile Money or card, follow every stage and keep official receipts. Monthly plans cover a set number of basket washes with free rider trips.
+
+The owner runs the shop from `#/admin`:
+
+- the counter: today's queue and check-in with a garment count, notes and photos
+- orders, as a list and as a board by stage
+- counter drop-offs
+- rider runs
+- clients with their care preferences
+- plans and renewals
+- payments, expenses and reports
+- reviews, services and prices, and settings
 
 - Business facts, scope and open questions: `docs/PRD.md`
-- Photos: `docs/photo-sources.md`
-- Look and structure (shared with the Franz Qlodin build): `docs/design-reference.md`, `docs/structure-reference.md`, `docs/admin-ui-guidelines.md`
+- Research and the proposal it came from: `docs/business-research.md`, `docs/proposal.md`
+- Photos and their licences: `docs/photo-sources.md`
+- Look and structure, shared with the other builds on this system: `docs/design-reference.md`, `docs/structure-reference.md`, `docs/admin-ui-guidelines.md`
 
 ## Run it
 
@@ -38,52 +50,57 @@ npm run build
 |---|---|
 | Under 810px (phones) | App layout: bottom tab bar, bottom sheets, sticky bottom action bars |
 | 810–1023px (tablets) | Floating top nav and footer, wider grids, dialogs instead of bottom sheets |
-| 1024px and up (desktop) | Two-column pages with sticky side cards on the studio page, order flow and order page |
+| 1024px and up (desktop) | Two-column pages with sticky side cards on the home page, order flow and order page |
 
-## The two lines
+## How an order moves
 
-Every menu item belongs to the kitchen, the workroom, or both, and that one field drives the app:
+`booked → received → washing → finishing → ready → out → done` (or `cancelled`). `out` only applies when the rider brings it back; counter collections go straight from ready to done.
 
-- **Explore** has a switch between *Cakes* and *Headpieces*; bundles like the Passion Chest show under either.
-- **Cakes** are priced from the studio's own menu card — four grids by shape (round/square/heart, bento, rectangular, kids themed) crossed with layers and size. The price is shown before you order, and a cake carries **one flavour per layer**, which is what her menu card allows.
-- **Handmade pieces** have no list price. They go out as a request, the owner sends a quote on WhatsApp, and a deposit starts the work. The order total says "So far" while a quote is outstanding, and the piece reads "By quote" rather than GH₵ 0.
-- **Stage names follow the order**: a cake goes *Baking → Decorating*, a headpiece goes *Beading → Finishing*, and a mixed order reads neutrally. The same applies to the WhatsApp updates the owner sends.
+- **Check-in is the defence against "you lost my shirt".** Nothing moves past *booked* until the counter counts the garments, notes anything already wrong (stains, loose buttons), optionally adds up to four photos, and confirms the final price. The client gets the count on WhatsApp.
+- **The clock starts at the counter, not at booking.** Ready time is worked out at check-in: 24 hours for standard (longer for suits, kente and gowns), or 3 *open* hours for express, so express handed in at 20:00 is ready at 09:00 the next morning.
+- **The rider runs in two-hour windows**, three runs per window. A delivery window can't start before the laundry will be ready.
+- **Handing over needs the balance paid**, unless the owner chooses to let it go home owing.
 
 ## Demo notes
 
 - All data is sample data kept in the browser (`localStorage`). **Profile → Reset demo data** (client) or **Settings → Reset demo data** (admin) restores it.
-- Cake prices come from the studio's Classic Cake Menu card; the Passion Chest price (GH₵ 220) is from the WhatsApp catalogue. Everything else is a sample for the owner to confirm in **Menu & prices** — `docs/PRD.md` lists exactly which.
-- Orders placed with less notice than the item needs are late orders and pay the GH₵ 50 late fee. Sundays are closed.
-- Paying in full online books a price-list cake straight away. Custom designs, tiered cakes and bespoke pieces stay a request until the owner sends the quote.
-- The owner side has no login in the demo. The studio's order book is simulated over five months from fixed seeds (`src/data/studio-seed.ts`), dated relative to today, so there's always something in the oven, something on the beading table and something ready.
-- WhatsApp updates and birthday reminders open WhatsApp with the message filled in; nothing is sent automatically.
-- You start without an account and can order without one. To see order history, dates to remember, allergies and head size, log in from **Profile** with the sample account `024 555 0142`.
+- Basket, ironing and express prices are the shop's own, from its TikTok price list. Rider fees, plan allowances, suit, kente, bedding and stain prices are samples for the owner to confirm in **Services & prices** and **Settings**; `docs/PRD.md` lists exactly which.
+- The shop's order book is simulated from its opening on 1 June 2026 from fixed seeds (`src/data/shop-seed.ts`), dated relative to today, so there's always something just checked in, something in the machines and something waiting on the shelf.
+- The owner side has no login in the demo.
+- You start without an account and can book without one. To see a plan, saved care preferences and order history, log in from **Profile** with the sample account `024 555 0142`, which is on the Solo plan.
 - Paystack payments and WhatsApp login codes are simulated. The code shows up as a notification at the top of the screen, and no money moves.
+- WhatsApp updates and renewal reminders open WhatsApp with the message filled in; nothing is sent automatically.
 - Going live needs a server to verify Paystack payments; see "Going live with Paystack" in `docs/PRD.md`.
 
 ## Photos
 
-Every photo is the studio's own, from [@ruffles_byh](https://www.instagram.com/ruffles_byh/) and [@bakedbyh_gh](https://www.instagram.com/bakedbyh_gh/); `docs/photo-sources.md` lists which post each came from. Items without a photo show a pastel tile with the hat mark, which is by design — a good tile beats a bad crop.
+The shop has only published video, so its photos are stills pulled from the videos on [@aromatic.laundry1](https://www.tiktok.com/@aromatic.laundry1). Two more come from Wikimedia Commons: a kente cloth (CC0) and the West Hills Mall frontage (CC BY-SA 4.0, credited on the map card). `docs/photo-sources.md` lists each one.
 
 The pipeline, in order:
 
 ```bash
-python scripts/fetch_photos.py brand/photo-list.json
+python -m yt_dlp -a brand/tiktok-videos.txt -o "brand/source-video/%(id)s.%(ext)s" --write-info-json
 ```
 
-Downloads the images in a JSON list (`[{"name", "url"}]`) into `brand/photos-instagram/`.
+Downloads the videos listed in `brand/tiktok-videos.txt`.
 
 ```bash
-python scripts/prepare_photos.py
+python scripts/extract_frames.py
 ```
 
-Crops out Instagram's stickers and burnt-in clocks and writes named originals to `brand/photos-original/`. The studio's own watermarks are left alone.
+Splits each video into shots and keeps the sharpest frame of each in `brand/frames/`, with a contact sheet per video in `brand/sheets/` for choosing.
 
 ```bash
-python scripts/upscale_photos.py --model path/to/real_esrgan_x4plus.onnx --below 1080
+python scripts/pick_photos.py
 ```
 
-Optional. Upscales small reel covers with Real-ESRGAN x4plus ([qualcomm/Real-ESRGAN-x4plus](https://huggingface.co/qualcomm/Real-ESRGAN-x4plus), BSD-3-Clause) on the CPU. Needs `pip install onnxruntime opencv-python numpy`. Output goes to `brand/photos-upscaled/`, which git ignores.
+Crops the chosen frames (listed in the script, with the timestamp of each) clear of captions and writes named originals to `brand/photos-original/`.
+
+```bash
+python scripts/upscale_photos.py --model path/to/real_esrgan_x4plus.onnx
+```
+
+Optional. Upscales the stills with Real-ESRGAN x4plus ([qualcomm/Real-ESRGAN-x4plus](https://huggingface.co/qualcomm/Real-ESRGAN-x4plus), BSD-3-Clause) on the CPU. Needs `pip install onnxruntime opencv-python numpy`. Output goes to `brand/photos-upscaled/`, which git ignores.
 
 ```bash
 python scripts/build_photos.py
@@ -91,10 +108,10 @@ python scripts/build_photos.py
 
 Writes three WebP sizes per photo to `public/photos/` (480, 1080 and up to 2160px) and `src/data/photo-manifest.json`, so the browser picks the right size.
 
-To add a photo for a menu item, put the JPG in `brand/photos-original/`, run the last script, and set `photo: "/photos/name.webp"` on the item in `src/data/catalog.ts`.
+To add a photo for a service, put the JPG or PNG in `brand/photos-original/`, run the last script, and set `photo: "/photos/name.webp"` on the service in `src/data/catalog.ts`.
 
 ## Brand files
 
-The colours are sampled from the studio's own brand card (`brand/photos-instagram/greetings-collage.jpg`), which carries both logos: wine `#7b0b33` from the @ruffles_byh wordmark, champagne gold `#e9c67e` from "Baked by H", on the card's ivory.
+The colours come from the shop's own price list (`brand/tiktok-photos/price-list.jpg`): blue `#0a4fb4` from the "Aromatic" wordmark is the logo and solid buttons, and aqua `#7ad7f0` from the water in the artwork is the one bright accent, always under dark text.
 
-The mark is the wide-brim hat from the @ruffles_byh logo, drawn in code (`src/components/Brand.tsx`) with the band and a beaded pin cut out of it so it reads at favicon size. `python scripts/make_icons.py` writes the favicon (`public/favicon.svg`), `public/brand/rbh-mark.svg` and the app icons from the same shapes. Swap in a vector of their real logo when they send one.
+The mark is a front-loading washer with the door and dials cut out and a wave in the drum, drawn in code (`src/components/Brand.tsx`). `python scripts/make_icons.py` writes the favicon (`public/favicon.svg`), `public/brand/al-mark.svg` and the app icons from the same shapes. Swap in a vector of their real logo when they send one.

@@ -1,20 +1,19 @@
 # Admin (owner side) UI guidelines
 
-> **Ruffles and Baked by H adaptation.** This reference came from the Franz Qlodin build by way of the Dough n Frost one, and this app reuses its layout, components and motion unchanged. What differs: the palette (wine-black ink `#2A141C` on ivory `#F7EFE9`, with wine `#7B0B33` as the brand and champagne gold `#E9C67E` as the one accent, called `gold` in code where the tailor build said `lime`; the pastel slots carry this studio's tones — see `src/styles/tokens.css`), the wide-brim hat mark (`src/components/Brand.tsx`), and the vocabulary:
+> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the system's ink `#242426` on cool grey `#EBEFF5`, with blue `#0A4FB4` from the shop's wordmark as the logo and solid buttons, and aqua `#7AD7F0` from its price list as the one accent, called `aqua` in code where the tailor build said `lime`; see `src/styles/tokens.css`), the washer mark (`src/components/Brand.tsx`), and the vocabulary:
 >
-> | Tailor build | Ruffles and Baked by H |
+> | Tailor build | Aromatic Laundry |
 > |---|---|
-> | Styles, catalogue | Menu items, the menu (plus the Classic Cake Menu grid) |
-> | One catalogue | Two lines: Baked by H (kitchen) and Ruffles by H (workroom) |
-> | Measurements, measuring visit | Dates to remember, allergies, head size; tasting or fitting |
-> | Fitting | Pickup or delivery slot — and a fitting, for hats and headbands |
-> | Deposit (50%) | Cakes: paid in full. Bespoke pieces: quote, then a 50% deposit |
-> | Cutting · Sewing · Fitting | Making · Finishing, worded per order (Baking/Decorating or Beading/Finishing) |
-> | Rush (+20%) | Late order (+GH₵ 50) |
-> | Workshop | Kitchen and workroom |
-> | TikTok | Instagram (two accounts) |
+> | Styles, catalogue | Services, the price list (baskets, ironing, suits & kente, bedding, stains) |
+> | Measurements, measuring visit | Care preferences (folded or hung, starch, scent); garment count at check-in |
+> | Fitting | Rider pickup and delivery windows (two hours, three runs each) |
+> | Deposit (50%) | Pay now, pay when it's done, or on the monthly plan |
+> | Cutting · Sewing · Fitting | Checked in · Washing · Ironing & folding |
+> | Rush (+20%) | Express: 3 open hours, +GH₵ 50 per order |
+> | Workshop | The floor (what's in the machines) |
+> | Instagram | TikTok |
 
-Rule for the owner side: **the look comes from the client side, the structure from the dashboard references in `STRUCTURE REFERENCE/admin/`, and the content from the owner's daily work at Ruffles and Baked by H.**
+Rule for the owner side: **the look comes from the client side, the structure from the dashboard references in `STRUCTURE REFERENCE/admin/`, and the content from the counter's daily work at Aromatic Laundry.**
 The client side's look is already in code (`src/styles/tokens.css`, `ui.css`, `src/motion.ts`), and it follows `design-reference.md`. Nothing on the admin side gets its own colours, fonts or radii.
 
 The owner works on a phone in the kitchen and the workroom and sometimes on a laptop, so every screen below is specified for both sizes.
@@ -45,7 +44,7 @@ The references are watermarked stock photos. Use them to study layout only; they
 | Depth | `--sh-soft` on cards, `--sh-float` on tooltips, popovers and the floating tab bar, `--sh-deep` on dialogs. |
 | Buttons | Primary action = `Cta` (dark button with a berry arrow square that swaps on hover). Secondary = `btn-outline` / `btn-soft`. Destructive = `btn-danger`, shown only inside a confirmation. |
 | Components to reuse | `Button`, `Cta`, `Dots`, `Badge`, `Avatar`, `Skeleton`/`useSkeleton`, `Sheet`, `DateStrip`, `MonthCalendar`, `CountUp`, `NotifyProvider` toasts, `SuccessScreen`, `LogoMark`/`AppIcon`, the `TopBar` pattern, `.chip`, `.segmented`, `.row`/`.list-card`, `.kv`, `.field`, `.banner`, `.empty`, `.timeline`. |
-| Brand | The Ruffles and Baked by H hat mark in the sidebar and tab bar. Splash stays strictly black and white. |
+| Brand | The Aromatic Laundry washer mark in the sidebar and tab bar. Splash stays strictly black and white. |
 
 What changes: information density (desktop rows are 44px instead of 52px), a persistent sidebar on wide screens, and marketing-only scroll effects are left out (section 12).
 
@@ -57,7 +56,7 @@ What changes: information density (desktop rows are 44px instead of 52px), a per
 
 ```
 ┌───────────────────┬──────────────────────────────────────────────────────────────┐
-│ [RBH] Ruffles & Baked by H │  Today              [ Search clients, orders… ]  (!) (F)     │
+│ [AL] Aromatic Laundry      │  Today              [ Search clients, orders… ]  (!) (F)     │
 │  Bakery admin     │  ● Open · 14 in production  [Last 30 days ▾] [■→ New order]  │
 │                   ├──────────────────────────────────────────────────────────────┤
 │ WORKSHOP          │                                                              │
@@ -81,7 +80,7 @@ What changes: information density (desktop rows are 44px instead of 52px), a per
 
 **Sidebar** (248px at ≥1200; a 76px icon rail at 810–1199). Right rails sit beside the content only at ≥1360px; below that they stack under it, because a 1280px laptop can't fit the sidebar, four KPI tabs and a rail side by side.
 - White surface on the ground, full height, sticky. The page scrolls; the sidebar doesn't.
-- Logo row at the top: `LogoMark` 32px + "Ruffles and Baked by H" (`t-title`) + "Studio admin" (`t-cap`, ink-75).
+- Logo row at the top: `LogoMark` 32px + "Aromatic Laundry" (`t-title`) + "Counter admin" (`t-cap`, ink-75).
 - Group labels: 12px Fragment Mono, uppercase, 0.06em tracking, ink-75. Groups: Kitchen · People · Money · Bakery.
 - Items: 40px tall, pill radius, 20px lucide icon (stroke 1.8) + 14px label in ink-75. Hover = `--ground` fill. **Active = berry fill, ink label, weight 500.** The fill slides between items using a shared `layoutId`, just like `tab-hl` on the client tab bar (`spring.press`).
 - Counts on the right (new requests, reviews waiting): the `.chip-count` bubble. Only show a count when something needs action.
@@ -147,7 +146,7 @@ Icon rail on the left. Right rails (pattern D) drop below the main column as a h
 - **Delta pill** (the `.badge` shape at 22px, no well): the arrow shows the direction, and the **fill shows whether the change is good or bad**. Good = berry, bad = sand, neutral = ground. Text is always ink. "Balance owed ↑" is sand even though the number went up. Each metric declares which direction is good.
 - **Chart:** section 7. Clicking a tab redraws the chart for that metric (crossfade 0.3s, `spring.micro`).
 - Period menu: Last 7 days · 30 days · 90 days · 12 months, in the `Dropdown` component (never the browser's own select menu). The period lives in the URL (`?period=90d`). The comparison is always the previous period of the same length.
-- Metrics for Ruffles and Baked by H: **Cash received · New orders · Balance owed · Collected** (Today); **New orders · Collected · Average order · On time %** (Reports). "Due this week" has no history to chart, so it lives in the workbench card instead.
+- Metrics for Aromatic Laundry: **Cash received (plan months included) · New orders · Unpaid · Handed over** (Today); **New orders · Handed over · Average order · On time %** (Reports). What's on the floor right now has no history to chart, so it lives in the floor card instead.
 - KPI numbers size to the card with container queries (24 → 26 → 30px), and the tabs go 2 × 2 when the card is under 720px.
 - **Phone:** tabs become a sideways-scrolling row of 150px mini cards. The selected card has the ground fill. The dropdown opens as a menu towards whichever side has room.
 - A **Table** toggle under every trend chart shows the same numbers as rows.

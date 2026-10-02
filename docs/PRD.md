@@ -1,149 +1,125 @@
-# Ruffles and Baked by H: Studio App (Demo) PRD
+# Aromatic Laundry: Laundry App (Demo) PRD
 
 ## Goal
-Make Hillary's daily work easier and give clients a simple way to order, pay for and follow both halves of what she makes: the handmade headpieces from the workroom and the cakes from the kitchen. One app with two sides, sharing the same data. It is the same system as the Franz Qlodin tailoring build and the Dough n Frost bakery build, retuned for a studio that runs two lines at once.
+Give Aromatic Laundry what its TikTok comments keep asking for: one place to see the prices, book a basket, follow it and pay. And give the counter one place to run the day. One app with two sides, sharing the same data.
+
+This is package B from `docs/proposal.md`: the client app plus the owner side. It is the same system as the Franz Qlodin, Ruffles and Baked and Royal Hair builds, retuned for a laundry. The order isn't made to order, it's counted in and handed back, and that changes the stages, the money and the promises.
 
 ## The business
-Everything below comes from their WhatsApp Business profile (`brand/source-video/IMG_3173.MP4`, a screen recording) and their two Instagram accounts, as seen on 23 Sept 2026.
+From the shop's TikTok [@aromatic.laundry1](https://www.tiktok.com/@aromatic.laundry1) (all 40 posts, captions, comments and the price list) and web searches, 1 Oct 2026. Full notes in `docs/business-research.md`.
 
 | | |
 |---|---|
-| Name | **Ruffles and Baked by H** (the WhatsApp contact is saved as "Hillary ICGC"); owner Hillary, who describes herself as "an accountant and administrator by profession" and Ruffles by H as "my first baby" |
-| The two halves | **Ruffles by H** — bespoke handmade headpieces and accessories. **Baked by H** — "delicious creamy goodness": cakes and pastries |
-| Services listed on WhatsApp | Millinery & Bead Work · Cakes & Pastries · Bridals (bouquets, tiara, boutonnieres, bridal fans et al) · Gift & Dowry wrapping · General merchandise · "All things classy and chic" |
-| WhatsApp bio | "Luxury and affordable handmade headbands, corsages, boutonnieres, brooches and more. Guaranteed to make you look great and feel fabulous" |
-| Location | **Kasoa** (from the Baked by H bio: "📍 Kasoa \| Nationwide delivery"). The street is never spelled out on any profile — see open questions. |
-| Phone and WhatsApp | +233 20 584 0753 · wa.me/233205840753 ("Contact us via text, phone call, WhatsApp") |
-| Email | rufflesbyh@gmail.com |
-| Instagram (pieces) | [@ruffles_byh](https://www.instagram.com/ruffles_byh/) "Bespoke Handmade Headpieces and Accessories": 629 followers, 590 posts |
-| Instagram (cakes) | [@bakedbyh_gh](https://www.instagram.com/bakedbyh_gh/) "Baked by H": 36 followers, 6 posts — "Home-baked with love · Crowd-pleasing cakes & pastries · Kasoa \| Nationwide delivery · DM to order \| Pre-order only" |
-| Facebook | "Ruffles by H", 291 likes |
-| WhatsApp Business since | March 2020 |
-| Hours (WhatsApp) | 08:00–19:00 |
-| Taglines | "Look great, feel fabulous" (Ruffles by H) · "Delicious creamy goodness" (Baked by H) · "Yummilicious cakes only" |
-| Brand marks | A black silhouette of a woman in a wide-brim hat beside "@ruffles_byh" in deep wine serif; "Baked by H" in black serif under a small gold tiered-cake icon, on ivory with gold confetti |
+| Name | **Aromatic Laundry**: "Premium laundry & dry cleaning". Owner **Diane** (named in comments; spelling to confirm) |
+| Where | Inside **West Hills Mall**, Dunkonah / Weija, on the Accra–Kasoa road. The only laundry in the mall's directory |
+| Opened | Around **1 June 2026** (the shopfront poster: "Opening soon, Monday 1st June 2026") |
+| Hours | "Mondays – Sundays, 7am to 9pm" |
+| Phone and WhatsApp | 054 890 8101. A directory listing also shows 054 653 8268 (not confirmed) |
+| Channels | TikTok only: 526 followers, 3,131 likes, about 47K views. No website, Instagram or Google Business Profile |
+| Taglines | "Fresh. Clean. Aromatic." (used in the app) · "Cleaner clothes. Better living." · "Clean Clothes. Fresh Life." |
+| What it stands for | The scent ("I spent hours smelling them"), speed, dryers so rain doesn't delay anything, suits and kente, stain rescue |
 
-### The WhatsApp catalogue
-Two collections. **BakedbyH:** 6 inches 2 layers cake · Kids themed birthday cakes · Wedding Cakes · 10 inch cakes · One layer small cakes · Desserts and pastries · Number cakes & special cakes · Menu card · Calendar cakes ("available in 2, 3 or 4 layers of…") · Premium Cake Menu · Classic Cake Menu. **Ruffles by H:** Passion Chest ("Plus Freebies", GH₵ 220.00) · Gorgeous Woman Collection · Scrunchies.
+### Price list (the shop's own, `brand/tiktok-photos/price-list.jpg`)
 
-### Price list (the Classic Cake Menu card, GH₵ per cake)
+| Wash, dry, fold & iron | Clothes | Price |
+|---|---|---|
+| Small basket | about 6–8 | GH₵ 50 |
+| Medium basket | about 10–15 | GH₵ 80 |
+| Big basket | about 20–35 | GH₵ 120 |
+| Ironing only | per item | GH₵ 5–10 |
 
-Flavours: Creamy Vanilla · Vanilla Raspberry · Vanilla Caramel · Strawberry · Strawberry Swirl · Chocolate · Red Velvet · White Velvet · Choco-Vanilla Marble · Red Velvet–Choco-Vanilla Marble.
-
-| Round, square & heart | Small (6″) | Medium (8″) | Large (10″) |
-|---|---|---|---|
-| 1 layer | 220 | 320 | 420 |
-| 2 layers | 420 | 620 | 820 |
-| 3 layers | 620 | 820 | 1200 |
-
-| Bento cakes | | | Rectangular cakes (2 layers each) | |
-|---|---|---|---|---|
-| 1 layer | 150 | | 4 × 8″ | 250 |
-| 2 layers | 300 | | 5 × 10″ | 450 |
-| | | | 8 × 12″ | 850 |
-| | | | 10 × 15″ | 1250 |
-
-| Kids themed birthday cakes (6″) | |
-|---|---|
-| 2 layers | 400 |
-| 3 layers | 600 |
-| 4 layers | 800 |
-
-Printed on the card: whipped cream frosting · extra toppings and toppers at a fee · other sizes and layers available. An older menu card adds the flavour allowance the app uses — **one flavour per layer** (1 layer = 1 flavour, 2 layers = up to 2, 3 layers = up to 3) — and a reel adds "no extra charge for fondant inscriptions".
-
-The card was read from a 288×640 screen recording and every figure was confirmed against an enlarged crop. The owner can correct any cell in **Menu & prices**.
-
-### Prices for the workroom
-Only one is published anywhere: the **Passion Chest at GH₵ 220**. Everything handmade is quoted after a chat, which is how she already works ("DM to order"), so the app treats bespoke pieces as **quote-first** rather than inventing a price list. The sample order book draws accepted quotes from plausible bands (see `src/data/studio-seed.ts`) purely so the owner's reports have money in them; no invented price is ever shown to a client.
+Standard turnaround **24 hours**. **Express: 3 hours for +GH₵ 50.** A monthly package at **GH₵ 400** "for busy professionals" was posted on 25 Sept 2026 without saying what it covers. Pickup and delivery are offered, but no fee is ever stated.
 
 ## Who
-- **Clients:** women ordering a hat or headpiece for a wedding, a thanksgiving or church; brides and wedding planners ordering the whole bridal set; parents ordering themed birthday cakes; families ordering engagement and dowry wrapping. They arrive from Instagram or WhatsApp, on a phone.
-- **Owner:** Hillary, working the kitchen and the workroom from her phone.
+- **Clients:** busy professionals and families on the west side of Accra (Weija, Gbawe, Kasoa, Mallam), and mall shoppers who drop laundry off while they shop. They arrive from TikTok, on a phone.
+- **Owner and counter staff:** Diane and the attendants at the counter, on a phone or the counter tablet.
 
 ## Stage
 Clickable demo using sample data stored in the browser. Paystack payments, WhatsApp codes and logins are simulated: no money moves and no messages are sent.
 
 ## Design
-The Franz Qlodin system (Makro look, Fresha structure; see `docs/design-reference.md`, `docs/structure-reference.md`, `docs/admin-ui-guidelines.md`) in Ruffles and Baked by H colours, taken from their own brand card: **wine** (#7b0b33) from the @ruffles_byh wordmark as the brand and primary action, **champagne gold** (#e9c67e) from "Baked by H" as the one bright accent, on the card's **ivory** ground. The mark is the wide-brim hat from their logo, with the band and a beaded pin cut out of it.
+The house system (Makro look, Fresha structure; see `docs/design-reference.md`, `docs/structure-reference.md`, `docs/admin-ui-guidelines.md`), with this shop's colours taken from its price list. **Blue** `#0a4fb4` from the "Aromatic" wordmark is the logo and solid buttons, with white text (7.5:1). **Aqua** `#7ad7f0` from the water in the artwork is the one bright accent, always under dark ink (9.5:1). The ground is the system's cool grey. The mark is a front-loading washer with a wave in the drum.
 
 ## Client side
 | Screen | Job |
 |---|---|
-| Home | Gallery of their own work, about, menu, how ordering works, reviews, hours, good to know, map, WhatsApp and Instagram |
-| Explore | The whole menu with a switch between **Cakes** and **Headpieces** (bundles show under both), filtered by occasion, searchable, with saved favourites |
-| Order | Menu → customise (flavours one per layer, layers, size, finish, design, message for cakes; colours to match for pieces) → day, pickup time or delivery window, fitting if wanted → your details, allergies and head size → review and pay. No account needed. |
-| Pay | Cakes on the price list: pay in full now (Paystack: Mobile Money or card) and the date is booked. Bespoke pieces and custom designs: send the request, get a quote on WhatsApp, then a deposit starts the work. |
-| Track | Orders on this phone; "Find my order" with order number + WhatsApp number + code; pickups and fittings; receipts |
-| Dates to remember | Birthdays and anniversaries the client saves for a WhatsApp reminder, plus allergies and head measurement (needs an account) |
-| Account (optional) | WhatsApp number + code, no password |
+| Home | Photos of the shop, about, the price list, how it works (book, count, wash, home), plans, reviews, hours, map pin in the mall, WhatsApp and TikTok |
+| Explore | Every service by category (baskets, ironing, suits & kente, bedding, stains), searchable, with saved favourites |
+| Book | Services → care and speed (folded or hung, starch, scent, notes; standard or express) → pickup and return (drop off or rider pickup by area and window; collect or delivery window) → details → review and pay (now, later, or on the plan). No account needed |
+| Track | Orders on this phone with a stage tracker, the garment count and notes from check-in, the fee breakdown and receipts; "Find my order" by order number + WhatsApp number + code |
+| Plans | Solo and Family: join, see baskets left this month, renew, cancel at the end of the month or change your mind, plan receipts |
+| Profile | Account (WhatsApp number + code, no password), saved care preferences, my plan, reset demo |
 
 ## Owner side (`#/admin`)
 | Screen | Job |
 |---|---|
-| Today | What to make today and the next working day (identical items counted together), trends, what's in progress, the next 14 days, today's pickups and fittings, birthday reminders to send, orders ready to hand over, requests waiting for a price |
-| Orders | List and board by stage, filters in the URL, one quick action per order |
-| Order | Stage stepper, money and receipts, items, allergies, brief and colours, pickup slot, WhatsApp updates |
-| New order | Walk-in and WhatsApp orders with the same menu options, late-order detection and payment |
-| Clients | Spend, unpaid, source; profile with orders, dates to remember, allergies, head size, a private notebook and payments |
-| Pickups & fittings | Calendar of pickups, deliveries, tastings and fittings; confirm, decline, remind |
-| Payments, Reports, Reviews | As in the tailor build |
-| Menu & prices | The Classic Cake Menu as four editable grids (round/square/heart, bento, rectangular, kids themed), and per-item prices, notice, visibility and featuring |
-| Settings | Studio details (incl. email, both Instagram handles, Facebook), hours, fees (late order, design, deposit %), policies, reset demo |
+| Today | The counter queue (bookings due in, soonest due first), what's on the floor by stage, due-by-hour chart, today's rider runs, laundry ready to hand over, renewals to chase, trends |
+| Orders | List and board by stage group (booked, in the shop, ready, handed over), filters in the URL (stage, express / rider / plan, payment, due window, owed), one next step per order |
+| Order | Stage stepper, check-in (count, notes, up to 4 photos, final price), money and receipts, care and handover, WhatsApp update with the message filled in |
+| New order | A counter drop-off: new or returning client, services, care, speed, handback, garment count, plan baskets, payment. Starts checked in |
+| Rider runs | Pickups and deliveries by day and window; confirm, decline, mark done |
+| Clients | Spend, unpaid, source, on a plan; profile with orders, care preferences, plan, notes and payments |
+| Plans | Members, baskets used, renewals due, record a renewal paid at the counter, plan receipts |
+| Payments, Expenses, Reports | Every payment including plan months; spending by category (direct and overhead); money in and out, takings by service, rider zones, express share |
+| Reviews | Approve, hide, reply |
+| Services & prices | Every service's price, turnaround, express allowed and visibility; the two plans |
+| Settings | Shop details, hours, express fee and hours, rider zones and fees, policies, reset demo |
 
 ## Data model
-- **Customer:** name, WhatsApp number (the matching key), email, town, address and GhanaPost address, account flag, points, lead source (Instagram / WhatsApp / Facebook / walk-in / referral / app), allergies, **head size**, owner's notebook (owner only)
-- **Celebration:** customer, label, month-day, remind flag, when the reminder was last sent
-- **Order:** number, customer, occasion, handover day, items, design plan (we design / client's picture / fitting) and notes, pickup or delivery, pay choice, status history, short-notice flag, total, payments
-- **Order item:** menu item, quantity, **flavours (one per layer)**, size and layers (cakes) or tiers (tiered), finish, design, message on the cake, **colours to match**, unit price
-- **Payment:** amount, method, payer, Paystack reference, receipt number, kind (full / part / final)
-- **Appointment:** pickup, delivery, tasting or fitting; time; status; linked order
-- **Menu item:** name, **line (cakes / ruffles / both)**, category, price kind (price list / tiered / per unit / **bespoke**), **price range** for cakes, price, extra per tier, unit, minimum quantity, notice in working days, visibility
-- **Price grid:** range × layers × size → price; blank = not offered
-- **Rules:** late-order fee, design fee, deposit percentage
+- **Customer:** name, WhatsApp number (the matching key), email, town, address and GhanaPost address, account flag, points, lead source (TikTok / WhatsApp / walk-in / referral / app), care preferences, owner's notes (owner only)
+- **Service:** name, category, kind (fixed price or priced at the counter), price, unit, capacity ("about 10–15 clothes"), minimum quantity, turnaround hours, express allowed, visibility
+- **Order:** number (AL-1041), customer, items, speed, care (finish, starch, scent, notes), intake (drop-off / pickup), handback (collect / delivery), rider zone, in time, ready time, status history, check-in, total with the rider fee, express fee, plan cover and discount kept separately, pay choice, plan subscription, payments
+- **Check-in:** garment count, notes, photos, time
+- **Payment:** amount, method, payer, reference, receipt number (ALR-2026-0042), kind (full / part / final)
+- **Appointment:** rider pickup or delivery, window start, length, status, linked order
+- **Plan / Subscription:** baskets a month, price, perks / client, period start, renewal day, status, ends-at-renewal flag, monthly payments
+- **Zone:** name, areas, fee per trip
+- **Expense:** day, amount, category (direct or overhead), method, note
 
-Order stages: `request → quoted → confirmed (paid) → making → finishing → ready → collected` (or `cancelled`). The two middle stages are worded per order: a cake is "Baking" then "Decorating", a headpiece is "Beading" then "Finishing", and a mixed order reads neutrally.
+Order stages: `booked → received → washing → finishing → ready → out → done` (or `cancelled`). `out` is only for deliveries.
 
 ## Edge cases
-- Less notice than the item needs: the day is marked "Late" and the late-order fee is added once per order. The next working day is the earliest; Sundays are closed.
-- A size isn't priced at that layer count: it's shown but disabled, and changing layers moves the size to one that is offered.
-- Choosing more flavours than there are layers: the oldest choice drops off, so the cake never carries more flavours than layers.
-- A bespoke piece has no price: the order total reads "So far" and says the pieces aren't in the number yet; the sticky bar reads "By quote".
-- Minimum quantities: boutonnieres 4, cake jars 6, guest favour boxes 10.
-- Payments can't exceed what's owed.
-- Paying in full online for a price-list cake books it (confirmed); paying for a custom design keeps it a request until the owner quotes, and the quote then books it.
-- The same WhatsApp number orders again as a guest: one customer record, allergies kept.
-- An order link opened on another phone: hidden until the order number, WhatsApp number and code match.
-- A reminder isn't offered twice within a month.
+- **Disputes over what was handed in:** nothing moves past *booked* until the counter records a garment count. Notes cover stains and damage found before washing, and photos are optional. The client sees all of it.
+- **"About 6–8 clothes":** the counter can change the total at check-in when a basket is bigger than booked, or to price a gown. The total can't drop below what's already paid.
+- **Express after hours:** express counts only open hours, so 3 hours from 20:00 is 09:00 the next day. A standard wash that lands after closing moves to the next opening.
+- **Express is per order**, not per basket, and only offered when every item can go through in 3 hours (no suits, kente, duvets).
+- **Rider capacity:** three runs per two-hour window. Windows less than two hours away are closed, and a delivery window can't start before the ready time.
+- **Plans:** the plan covers the dearest baskets first, and plan orders ride free. When the month's baskets are used up, the order can't be put on the plan. A cancelled plan still runs to the end of the paid month. A renewal moves the month on from where it ended, or from today if it lapsed more than a week ago.
+- **Handing over while owing:** blocked unless the owner chooses to allow it.
+- **Cancelling:** clients can cancel only before the laundry reaches the counter. Cancelling releases the rider windows.
+- **Same number again:** one customer record; care preferences, account and points kept.
+- **An order link opened on another phone:** hidden until the order number, WhatsApp number and code match.
+- **Payments can't exceed what's owed**, and plan payments must match the plan price.
 
 ## Open questions for the owner
-1. **The pickup address.** No profile gives a street — the app says "Kasoa, Central Region" and the directions promise to send the exact spot on WhatsApp. Fill in the real street and landmark in **Settings → Studio**.
-2. **Opening days.** WhatsApp shows one 08:00–19:00 range with no per-day breakdown. The app assumes Monday–Saturday open and Sunday closed (the owner's own posts are church-facing). Correct it in **Settings → Hours**.
-3. **Notice periods.** Cakes use 3 working days (5 for kids' themed) and pieces 5–21 days. Confirm the real turnarounds.
-4. **Prices not on the menu card.** Wedding cake (GH₵ 1,800 for 2 tiers + GH₵ 600 per extra tier), calendar cake (GH₵ 900), dessert box (GH₵ 180), cake jars (GH₵ 35), cupcakes (GH₵ 120), boutonnieres (GH₵ 60), brooch (GH₵ 80), scrunchies (GH₵ 45), Crown Her set (GH₵ 450), guest favour box (GH₵ 55) are all **samples**. Only the Passion Chest (GH₵ 220) and the cake grid are real.
-5. **Ganache (+GH₵ 120) and fondant (+GH₵ 150)** extras are samples; the menu card only prices whipped cream.
-6. **The deposit.** The app takes 50% to start a bespoke piece. Confirm.
-7. **Delivery:** fee by distance paid to the rider, or a fixed zone price? Nationwide delivery is advertised but not priced.
-8. **The Premium Cake Menu and Calendar cakes** were in the catalogue but never opened on the recording — send those cards and they go straight in.
-9. The duplicate "Strawberry" on the flavour list (it appears twice on the card) — is one of them meant to be something else?
+1. **The owner's name.** Comments say "Diane" and "Diana". Which is right?
+2. **Which number is official:** 054 890 8101 or 054 653 8268?
+3. **The shop's unit** inside West Hills Mall (floor, near which anchor), for the directions.
+4. **Rider fees and coverage.** The four zones (Weija & Gbawe ₵15, Kasoa road ₵20, Mallam & McCarthy Hill ₵25, further into Accra ₵40 per trip) are samples.
+5. **What the ₵400 plan covers.** The app's Solo plan is 4 basket washes a month with free pickup, and Family (₵750, 8 baskets) is a sample. Is there an item cap, a pickup limit, a household rule?
+6. **Dry cleaning prices.** Suit ₵60, blazer ₵35, kente ₵80, agbada ₵50, duvet ₵70, bedsheet set ₵30, curtains ₵25 a panel, towels ₵20 for four and stain rescue ₵15 are samples. Gowns are priced at the counter.
+7. **Ironing by item.** The list says ₵5–10. The app uses ₵5 shirts and trousers, ₵8 dresses, ₵10 native sets.
+8. **Express fee per order or per basket?** The app charges ₵50 once per order.
+9. **Turnarounds for special garments.** The app uses 48 hours for suits, agbada, duvets and curtains, 72 for kente, and 96 for gowns.
 
 ## Going live with Paystack
-- The app starts the payment with the public key; the secret key lives only on the server.
-- An order is marked paid only after the server verifies the transaction (Paystack verify API or a webhook with a checked signature), and the verified amount and currency (GHS) match what's due.
-- The Paystack reference (`RBH1042-XXXXXX`) is unique per attempt, so a repeated webhook can't record a payment twice.
+- The app starts the payment with the public key. The secret key lives only on the server.
+- An order or plan month is marked paid only after the server verifies the transaction (Paystack verify API, or a webhook with a checked signature), and the verified amount and currency (GHS) match what's due.
+- The Paystack reference (`AL1042-XXXXXX`) is unique per attempt, so a repeated webhook can't record a payment twice.
 - Receipts are numbered on the server after verification.
+- Plan renewals become Paystack subscriptions, with the renewal reminder as the fallback.
 
 ## Out of scope (demo)
-Real authentication, live Paystack and WhatsApp (need the server above), sending reminders automatically, materials and ingredient stock, multi-staff roles.
+Real authentication, live Paystack and WhatsApp (they need the server above), automatic reminders, detergent stock, machine scheduling, multi-staff roles and shifts, a rider's own app.
 
 ## Decision log
 | Decision | Alternatives | Why |
 |---|---|---|
-| Copy the same system and retune it | Build from scratch | Calvin asked for the same system; the structure is proven |
-| One app for both lines, with a switch | Two separate apps | It's one owner, one order book, one WhatsApp number — and clients already cross over ("sister biz") |
-| Bespoke pieces are quote-first, with no list price | Invent a price list | She has never published one; inventing prices would put wrong numbers in front of her clients |
-| Cake prices from four grids keyed by shape | One grid keyed by flavour | Her menu card is organised by shape and layers, and flavour doesn't change the price |
-| One flavour per layer | One flavour per cake | Her own menu card says "up to 2 flavours"/"up to 3 flavours" by layer count, and her posts show two-flavour cakes |
-| Stage names vary by order line | One neutral set | "Baking" is wrong for a tiara and "Beading" is wrong for a cake; the order knows which it is |
-| Wine and champagne gold on ivory | Keep the bakery's frosting pink | Different brand colours were asked for, and these are hers, sampled from her own brand card |
-| The hat silhouette as the mark | A monogram | It's already her logo mark on @ruffles_byh |
-| Real photos from their two Instagram accounts | Stock photos | They are her own work; the same approach as the previous two builds |
+| Copy the house system and retune it | Build from scratch | Calvin asked for the same structure as the previous builds, and it's proven |
+| Check-in with a count before anything moves | Start washing on booking | A count at the counter stops "you lost my shirt", the most common laundry dispute |
+| Ready time set at check-in | Set at booking | A rider pickup can arrive hours after booking, and the promise should start when the clothes are in |
+| Express counts open hours only | Wall-clock hours | The shop closes at 9pm, so wall-clock hours would promise times nobody is there |
+| Plan covers baskets, not items | An item cap | The price list is by basket, and that's what the counter already counts |
+| Fees stored on the order | Work them out by subtraction | Plan cover, express and discounts combine, and subtraction got the breakdown wrong |
+| Blue and aqua from the price list | Keep another build's palette | They're the shop's own colours |
+| Stills from the shop's TikTok videos | Stock photos | Video is all they've published; it's their real shop, staff and work |

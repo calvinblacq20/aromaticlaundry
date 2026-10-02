@@ -1,21 +1,20 @@
 # Structure reference: Fresha client app
 
-> **Ruffles and Baked by H adaptation.** This reference came from the Franz Qlodin build by way of the Dough n Frost one, and this app reuses its layout, components and motion unchanged. What differs: the palette (wine-black ink `#2A141C` on ivory `#F7EFE9`, with wine `#7B0B33` as the brand and champagne gold `#E9C67E` as the one accent, called `gold` in code where the tailor build said `lime`; the pastel slots carry this studio's tones — see `src/styles/tokens.css`), the wide-brim hat mark (`src/components/Brand.tsx`), and the vocabulary:
+> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the system's ink `#242426` on cool grey `#EBEFF5`, with blue `#0A4FB4` from the shop's wordmark as the logo and solid buttons, and aqua `#7AD7F0` from its price list as the one accent, called `aqua` in code where the tailor build said `lime`; see `src/styles/tokens.css`), the washer mark (`src/components/Brand.tsx`), and the vocabulary:
 >
-> | Tailor build | Ruffles and Baked by H |
+> | Tailor build | Aromatic Laundry |
 > |---|---|
-> | Styles, catalogue | Menu items, the menu (plus the Classic Cake Menu grid) |
-> | One catalogue | Two lines: Baked by H (kitchen) and Ruffles by H (workroom) |
-> | Measurements, measuring visit | Dates to remember, allergies, head size; tasting or fitting |
-> | Fitting | Pickup or delivery slot — and a fitting, for hats and headbands |
-> | Deposit (50%) | Cakes: paid in full. Bespoke pieces: quote, then a 50% deposit |
-> | Cutting · Sewing · Fitting | Making · Finishing, worded per order (Baking/Decorating or Beading/Finishing) |
-> | Rush (+20%) | Late order (+GH₵ 50) |
-> | Workshop | Kitchen and workroom |
-> | TikTok | Instagram (two accounts) |
+> | Styles, catalogue | Services, the price list (baskets, ironing, suits & kente, bedding, stains) |
+> | Measurements, measuring visit | Care preferences (folded or hung, starch, scent); garment count at check-in |
+> | Fitting | Rider pickup and delivery windows (two hours, three runs each) |
+> | Deposit (50%) | Pay now, pay when it's done, or on the monthly plan |
+> | Cutting · Sewing · Fitting | Checked in · Washing · Ironing & folding |
+> | Rush (+20%) | Express: 3 open hours, +GH₵ 50 per order |
+> | Workshop | The floor (what's in the machines) |
+> | Instagram | TikTok |
 
 Source: `STRUCTURE REFERENCE/` (2 screen recordings, 147s and 13s, plus 2 screenshots) of the Fresha client app booking a hair salon in Kumasi.
-Rule for this project: **take the structure and flow from Fresha, the look (fonts, patterns, motion) from Makro (`design-reference.md`) in Ruffles and Baked by H's colours, and the content from Ruffles and Baked by H.** Every Fresha logo is replaced with the Ruffles and Baked by H hat mark.
+Rule for this project: **take the structure and flow from Fresha, the look (fonts, patterns, motion) from Makro (`design-reference.md`) in Aromatic Laundry's colours, and the content from Aromatic Laundry.** Every Fresha logo is replaced with the Aromatic Laundry washer mark.
 
 ---
 
@@ -93,22 +92,23 @@ A push notification arrives right after, from the Fresha app with its logo: "You
 - Buttons show a 3-dot loader while an action is running
 - Success and cancel screens: full-screen moving gradient + ✓ + big type, then dissolve
 
-## 4. Mapped to Ruffles and Baked by H
+## 4. Mapped to Aromatic Laundry
 
-| Fresha | Ruffles and Baked by H |
+| Fresha | Aromatic Laundry |
 |---|---|
-| Home = venue page | **Studio page**: work-photo carousel, "Bespoke menswear · Kasoa", rating, open status, address. Section tabs: Lookbook · About · Styles · Reviews · Info |
-| Search | **Explore**: search and filter styles by occasion (church, wedding, funeral, political, everyday) |
-| Activity (Appointments / Gift cards / Memberships) | **Orders** tab: chips **Orders · Fittings · Receipts**; rows show style, date, GH₵, **Reorder** |
-| Profile (wallet, confirm phone, menu) | **Profile**: balance-due card (Pay with MoMo) · confirm phone · Profile · **My measurements** · Saved styles · Messages (WhatsApp) · My orders · Fittings · Forms · Settings · Support · Language · Log out |
-| Services with categories | **Styles** by category (Kaftans · Agbada · Suits · Church · Political · Shirts · Kids) with "from GH₵" and "ready in ~7 days" |
-| Select professional | **Customise**: fabric (bring your own / studio fabric), embroidery, fit, reference photo |
-| Select date and time | **Needed by + measuring**: occasion date strip, then how to measure (visit slot / saved measurements / measure yourself) with date strip and time slots for visits |
-| Review and confirm | Style lines, estimate, deposit note, needed-by, delivery or pickup, policies, comments |
-| "Appointment confirmed" | **"Order request sent"** (Makro colours) |
-| Booking detail | **Order detail**: status badge (Request received · Action required: pay deposit · In production · Ready for pickup · Collected · Cancelled) · "Ready by Sat 20 Sept" · action banner · actions (Add fitting to calendar · Directions · WhatsApp · Studio details) · **production tracker** · Overview (items, total, paid, balance) · **Receipts** (in the Forms position) · policies with Reschedule fitting / Cancel request · Getting there · order reference |
-| Rebook / Book again | Reorder, using saved measurements |
-| Loyalty / Refer a friend | Loyalty points + Refer a friend |
-| Push notification with Fresha logo | In-app notification banner with the **Ruffles and Baked by H mark** |
+| Home = venue page | **Shop page**: shop-photo carousel, "Premium laundry & dry cleaning · West Hills Mall", rating, open status, address. Section tabs: Gallery · About · Prices · Plans · Reviews · Info |
+| Search | **Explore**: search services and filter by category (baskets, ironing, suits & kente, bedding, stains) |
+| Activity (Appointments / Gift cards / Memberships) | **Orders** tab: chips **Orders · Pickups · Receipts**; rows show the services, ready time, GH₵ and the stage badge |
+| Memberships | **Plans**: Solo and Family, baskets left this month, renew, cancel at the end of the month |
+| Profile (wallet, confirm phone, menu) | **Profile**: your details · **My plan** · **Laundry preferences** (finish, starch, scent) · saved services · messages (WhatsApp) · my orders · pickups and deliveries · TikTok · support · log out. Signed out: find my order, orders on this phone, monthly plans |
+| Services with categories | **Price list** by category, with "About 10–15 clothes", the price, and "ready in 24 hours" |
+| Select professional | **Care & speed**: folded or on hangers, starch, scent, notes; standard or express (+GH₵ 50, 3 hours) |
+| Select date and time | **Pickup & return**: drop off at a half-hour slot, or a rider pickup by area and two-hour window; then collect, or a delivery window that opens once it's ready |
+| Review and confirm | Service lines, fee breakdown (rider, express, plan cover), pay now / when it's done / on the plan, policies, comments |
+| "Appointment confirmed" | **"Pickup booked" / "Drop-off booked"** (Makro colours) |
+| Booking detail | **Order detail**: stage badge (Pickup booked · At the counter · Washing · Ironing & folding · Ready · On its way · Delivered) · "Ready tomorrow at 09:00" · action banner (pay now, add the rider window to the calendar, directions) · **stage tracker** · the garment count and notes from check-in · Overview (items, fees, paid, balance) · **Receipts** · care and handover · cancel before pickup · order reference |
+| Rebook / Book again | Book again with the same services and care |
+| Loyalty / Refer a friend | Loyalty points |
+| Push notification with Fresha logo | In-app notification banner with the **Aromatic Laundry mark** |
 
 The owner side reuses the same patterns (lists, chips, bottom sheets, sticky bars, status badges, skeletons), with Makro's dashboard for the Today screen. Its layout rules are in `admin-ui-guidelines.md`.
