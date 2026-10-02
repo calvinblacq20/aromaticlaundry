@@ -4,14 +4,14 @@ Aromatic Laundry has only published video, so every photo of the shop and its wo
 
 | In the app | Video | Posted | Second | What it shows | Used for |
 |---|---|---|---|---|---|
-| `shop-front` | [7646467377156148501](https://www.tiktok.com/@aromatic.laundry1/video/7646467377156148501) | 1 Jun 2026 | 14.0 | The shopfront inside the mall | Home gallery |
-| `shop-counter` | [7646781272475405589](https://www.tiktok.com/@aromatic.laundry1/video/7646781272475405589) | 2 Jun 2026 | 21.7 | The counter | Home gallery, how it works, login |
-| `machines` | [7646710010172476693](https://www.tiktok.com/@aromatic.laundry1/video/7646710010172476693) | 2 Jun 2026 | 12.6 | Washers and dryers | Home gallery, how it works |
-| `stain-treatment` | [7647645416665664788](https://www.tiktok.com/@aromatic.laundry1/video/7647645416665664788) | 4 Jun 2026 | 18.8 | Palm-oil stain treated by hand (the pinned 19K-view video) | Stain rescue, home gallery |
+| `shop-front` | [7646467377156148501](https://www.tiktok.com/@aromatic.laundry1/video/7646467377156148501) | 1 Jun 2026 | 14.0 | The shopfront inside the mall | Sign-in |
+| `shop-counter` | [7646781272475405589](https://www.tiktok.com/@aromatic.laundry1/video/7646781272475405589) | 2 Jun 2026 | 21.7 | The counter | How it works, login |
+| `machines` | [7646710010172476693](https://www.tiktok.com/@aromatic.laundry1/video/7646710010172476693) | 2 Jun 2026 | 12.6 | Washers and dryers | How it works |
+| `stain-treatment` | [7647645416665664788](https://www.tiktok.com/@aromatic.laundry1/video/7647645416665664788) | 4 Jun 2026 | 18.8 | Palm-oil stain treated by hand (the pinned 19K-view video) | Stain rescue |
 | `shirts-pressed` | [7648261643452894485](https://www.tiktok.com/@aromatic.laundry1/video/7648261643452894485) | 6 Jun 2026 | 6.5 | A week of shirts pressed on hangers | Ironing |
 | `suit-care` | [7648356816027438356](https://www.tiktok.com/@aromatic.laundry1/video/7648356816027438356) | 6 Jun 2026 | 16.8 | A suit being pressed | Suits |
-| `folded-stack` | [7648693722221169940](https://www.tiktok.com/@aromatic.laundry1/video/7648693722221169940) | 7 Jun 2026 | 24.5 | Folded, sealed laundry | Medium basket, baskets category, home gallery |
-| `team` | [7648693722221169940](https://www.tiktok.com/@aromatic.laundry1/video/7648693722221169940) | 7 Jun 2026 | 17.1 | An attendant in the shop's uniform | Home gallery |
+| `folded-stack` | [7648693722221169940](https://www.tiktok.com/@aromatic.laundry1/video/7648693722221169940) | 7 Jun 2026 | 24.5 | Folded, sealed laundry | Medium basket, baskets category |
+| `team` | [7648693722221169940](https://www.tiktok.com/@aromatic.laundry1/video/7648693722221169940) | 7 Jun 2026 | 17.1 | An attendant in the shop's uniform | Not shown at the moment |
 | `bedding` | [7660529234435280148](https://www.tiktok.com/@aromatic.laundry1/video/7660529234435280148) | 9 Jul 2026 | 8.8 | Bedding, stained to spotless | Duvet, bedding category |
 | `gown` | [7675311564437703957](https://www.tiktok.com/@aromatic.laundry1/video/7675311564437703957) | 18 Aug 2026 | 4.8 | A gown on a hanger | Wedding gown |
 | `arrivals` | [7679422683053821204](https://www.tiktok.com/@aromatic.laundry1/video/7679422683053821204) | 29 Aug 2026 | 6.9 | A client handing in a bag at the counter | How it works: counted and tagged |
@@ -41,15 +41,19 @@ Eight services had no photo because the shop hasn't posted that kind of work. Th
 | `trousers` | [kg3N8vqvMd8](https://unsplash.com/photos/kg3N8vqvMd8) | Clem Onojeghuo | 3333×5000 | Trousers or skirt |
 | `dress` | [fBCptLC4GJY](https://unsplash.com/photos/fBCptLC4GJY) | Eduardo Espinoza | 4000×6000 | Dress, kaba or slit |
 | `kaftan` | [gPT2JJdMnag](https://unsplash.com/photos/gPT2JJdMnag) | Shedrack Salami | 2350×3112 | Kaftan or native set |
-| `blazer` | [LkR6zTayf-o](https://unsplash.com/photos/LkR6zTayf-o) | Vetrivel Viswanathar | 4480×6720 | Jacket or blazer |
+| `blazer` | [LkR6zTayf-o](https://unsplash.com/photos/LkR6zTayf-o) | Vetrivel Viswanathar | 4480×6720 | Jacket or blazer; home hero (Sharp & Pressed) |
 | `agbada` | [wYV0hKtOblc](https://unsplash.com/photos/wYV0hKtOblc) | Olumide Adekunle | 3648×5472 | Agbada or three-piece native |
-| `bedsheets` | [dJkL-w-grqA](https://unsplash.com/photos/dJkL-w-grqA) | byMATTER MADE BETTER | 2624×3936 | Bedsheet set |
-| `curtains` | [VIk1nwibgNE](https://unsplash.com/photos/VIk1nwibgNE) | dimas anggara | 4160×6240 | Curtains |
-| `towels` | [qPNgpYUCW0c](https://unsplash.com/photos/qPNgpYUCW0c) | Mads Leif Hansen | 6240×4160 | Towels |
+| `bedsheets` | [dJkL-w-grqA](https://unsplash.com/photos/dJkL-w-grqA) | byMATTER MADE BETTER | 2624×3936 | Bedsheet set; home hero (Stain Rescue) |
+| `curtains` | [VIk1nwibgNE](https://unsplash.com/photos/VIk1nwibgNE) | dimas anggara | 4160×6240 | Curtains; home hero (Door to Door) |
+| `towels` | [qPNgpYUCW0c](https://unsplash.com/photos/qPNgpYUCW0c) | Mads Leif Hansen | 6240×4160 | Towels; home hero (Cleaner Clothes) |
 
 All eight are under the [Unsplash License](https://unsplash.com/license): free for commercial use, no credit required (it's given here anyway). The licence doesn't cover the likeness of recognisable people, so the four photos of people are cropped to the garment, below the face: agbada, kaftan and dress from the neckline down, and the trousers from the waist down. That crop also leaves out a bank's sign behind the kaftan. The crops are in `scripts/pick_photos.py`.
 
 These photos show the kind of garment, not the shop's own work. Swap each for a photo of Aromatic Laundry's own pressing once the shop has one, under the same name.
+
+### The home hero
+
+The home page's slideshow fills the whole hero with four of these photos, the ones with nobody in them: towels, bedsheets, curtains and blazer. `scripts/build_hero_photos.py` cuts each into a tall 3:4 crop for portrait screens (720, 1080 and 1440px wide) and a wide 3:2 crop for landscape ones (1280, 1920 and 2560px), straight from the full-size originals, into `public/photos/hero/`. The crop boxes are in the script. To change a hero photo, put the new original in `brand/internet/`, point the slide at it in the script and run `python scripts/build_hero_photos.py`; `src/client/home/EditorialHero.tsx` lists the slides.
 
 ## Not used
 
