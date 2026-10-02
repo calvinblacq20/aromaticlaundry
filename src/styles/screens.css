@@ -34,19 +34,7 @@
 .section-underline { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--ink); }
 .anchor { scroll-margin-top: 112px; }
 
-.hero { position: relative; margin-inline: calc(var(--gutter) * -1); }
-.hero-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-.hero-track::-webkit-scrollbar { display: none; }
-.hero-slide { flex: none; width: 100%; scroll-snap-align: start; }
-.hero-actions { position: absolute; top: 14px; right: 16px; display: flex; gap: 8px; }
-.hero-count {
-  position: absolute;
-  right: 16px;
-  bottom: 40px;
-  color: #fff;
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 14px rgba(0, 0, 0, 0.4);
-}
+.hero-actions { position: absolute; top: 14px; right: 16px; z-index: 5; display: flex; gap: 8px; }
 
 .intro {
   position: relative;
