@@ -74,7 +74,7 @@ npm run build
 
 ## Photos
 
-The shop has only published video, so its photos are stills pulled from the videos on [@aromatic.laundry1](https://www.tiktok.com/@aromatic.laundry1). Two more come from Wikimedia Commons: a kente cloth (CC0) and the West Hills Mall frontage (CC BY-SA 4.0, credited on the map card). `docs/photo-sources.md` lists each one.
+The shop has only published video, so its photos are stills pulled from the videos on [@aromatic.laundry1](https://www.tiktok.com/@aromatic.laundry1). Two more come from Wikimedia Commons: a kente cloth (CC0) and the West Hills Mall frontage (CC BY-SA 4.0, credited on the map card). Eight services the shop hasn't filmed (trousers, dresses, kaftans, blazers, agbada, bedsheets, curtains, towels) use Unsplash photos, cropped to the garment. `docs/photo-sources.md` lists each one with its licence.
 
 The pipeline, in order:
 
@@ -94,19 +94,19 @@ Splits each video into shots and keeps the sharpest frame of each in `brand/fram
 python scripts/pick_photos.py
 ```
 
-Crops the chosen frames (listed in the script, with the timestamp of each) clear of captions and writes named originals to `brand/photos-original/`.
+Crops the chosen frames (listed in the script, with the timestamp of each) clear of captions and writes named originals to `brand/photos-original/`. It also crops the Commons and Unsplash photos from `brand/internet/`, at up to 4K.
 
 ```bash
-python scripts/upscale_photos.py --model path/to/real_esrgan_x4plus.onnx
+python scripts/upscale_photos.py --model path/to/real_esrgan_x4plus.onnx --threads 5 [names...]
 ```
 
-Optional. Upscales the stills with Real-ESRGAN x4plus ([qualcomm/Real-ESRGAN-x4plus](https://huggingface.co/qualcomm/Real-ESRGAN-x4plus), BSD-3-Clause) on the CPU. Needs `pip install onnxruntime opencv-python numpy`. Output goes to `brand/photos-upscaled/`, which git ignores.
+Upscales every original under 70% of 4K to a 4K master with Real-ESRGAN x4plus ([qualcomm/Real-ESRGAN-x4plus](https://huggingface.co/qualcomm/Real-ESRGAN-x4plus), BSD-3-Clause) on the CPU. Needs `pip install onnxruntime opencv-python numpy`. Output goes to `brand/photos-upscaled/`, which git ignores. A full run takes about an hour, so split the names across a few processes. Without it, the small stills get no 4K file.
 
 ```bash
 python scripts/build_photos.py
 ```
 
-Writes three WebP sizes per photo to `public/photos/` (480, 1080 and up to 2160px) and `src/data/photo-manifest.json`, so the browser picks the right size.
+Writes four WebP sizes per photo to `public/photos/` (480px, 1080px, 2160px, and 4K at a 3840px long side) and `src/data/photo-manifest.json`, so the browser picks the right size. `src/components/Bits.test.ts` checks that every photo the app uses is built, at 4K.
 
 To add a photo for a service, put the JPG or PNG in `brand/photos-original/`, run the last script, and set `photo: "/photos/name.webp"` on the service in `src/data/catalog.ts`.
 

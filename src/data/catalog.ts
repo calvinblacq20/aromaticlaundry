@@ -107,6 +107,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 24,
     express: true,
     tone: "sand",
+    photo: "/photos/trousers.webp",
   },
   {
     id: "iron-dress",
@@ -119,6 +120,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 24,
     express: true,
     tone: "blush",
+    photo: "/photos/dress.webp",
   },
   {
     id: "iron-native",
@@ -131,6 +133,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 24,
     express: true,
     tone: "lilac",
+    photo: "/photos/kaftan.webp",
   },
 
   // ── Suits, kente & special garments ──────────────────────────────────────
@@ -159,6 +162,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 48,
     express: false,
     tone: "steel",
+    photo: "/photos/blazer.webp",
   },
   {
     id: "kente",
@@ -185,6 +189,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 48,
     express: false,
     tone: "sand",
+    photo: "/photos/agbada.webp",
   },
   {
     id: "gown",
@@ -225,6 +230,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 24,
     express: true,
     tone: "mist",
+    photo: "/photos/bedsheets.webp",
   },
   {
     id: "curtains",
@@ -238,6 +244,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 48,
     express: false,
     tone: "lilac",
+    photo: "/photos/curtains.webp",
   },
   {
     id: "towels",
@@ -250,6 +257,7 @@ const DEFAULT_SERVICES: Service[] = [
     hours: 24,
     express: true,
     tone: "aqua",
+    photo: "/photos/towels.webp",
   },
 
   // ── Stain rescue ──────────────────────────────────────────────────────────

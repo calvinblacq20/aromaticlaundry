@@ -21,10 +21,10 @@ export function useSkeleton(ms = 550): boolean {
   return loading;
 }
 
-type ManifestEntry = { sm: number; w: number; w2x: number; h: number };
+type ManifestEntry = { sm: number; w: number; w2x: number; w4k?: number; h: number };
 const MANIFEST = photoManifest as Record<string, ManifestEntry>;
 
-/** Builds a width-based srcset (small / standard / full-resolution) for photos made by scripts/build_photos.py. */
+/** Builds a width-based srcset (small / standard / retina / 4K) for photos made by scripts/build_photos.py. */
 export function photoSrcSet(src?: string): string | undefined {
   const match = src?.match(/^\/photos\/([\w-]+)\.webp$/);
   const name = match?.[1];
@@ -35,6 +35,7 @@ export function photoSrcSet(src?: string): string | undefined {
     [entry.w, `/photos/${name}.webp`],
     [entry.w2x, `/photos/${name}@2x.webp`],
   ]);
+  if (entry.w4k) byWidth.set(entry.w4k, `/photos/${name}@4k.webp`);
   return [...byWidth].map(([width, url]) => `${url} ${width}w`).join(", ");
 }
 

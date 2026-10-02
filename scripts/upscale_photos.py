@@ -1,14 +1,23 @@
-"""AI-upscale low-resolution originals to 4K-class sharpness with Real-ESRGAN x4plus (ONNX, runs locally).
+"""AI-upscale the soft video stills to 4K with Real-ESRGAN x4plus (ONNX, runs locally on the CPU).
 
-By default only photos narrower than 1440px are upscaled; pass --below 2160 to upscale every
-photo that is smaller than the 2160px web size. Each photo is fed in at (target width / 4) so the x4 output lands at ~2160px wide,
-processed in overlapping 128px tiles with feathered blending (no seams), then saved as a
-lossless PNG in brand/photos-upscaled/. scripts/build_photos.py uses those automatically.
+4K here is a 3840px long side, the size scripts/build_photos.py exports as name@4k.webp. Originals
+already at 70% of that or more are skipped: build_photos.py resizes those itself, which keeps their
+real detail where the model would paint over it.
+
+A still narrower than a quarter of its 4K width is first enlarged to that quarter with Lanczos, then
+fed to the model: tried on the 460px `team` still, that came out about 3.5x crisper at the edges than
+running the model on the raw pixels and enlarging its output. Wider stills go in as they are (or at
+half the 4K width, if larger) and the x4 output is scaled down to 4K. The model runs in overlapping
+128px tiles with feathered blending (no seams), and each master is saved as a lossless PNG in
+brand/photos-upscaled/. Masters smaller than 4K, from older runs, are redone.
 
 Model: Qualcomm AI Hub release of Real-ESRGAN x4plus (BSD-3-Clause),
 https://huggingface.co/qualcomm/Real-ESRGAN-x4plus
 
-Usage:  python scripts/upscale_photos.py --model path/to/real_esrgan_x4plus.onnx [--below 2160] [names...]
+Usage:  python scripts/upscale_photos.py --model path/to/real_esrgan_x4plus.onnx [--threads N] [names...]
+
+It takes 2-5 seconds a tile, so a full run is about an hour; run a few processes side by side on
+different names, each with --threads set to share the cores.
 """
 
 from __future__ import annotations
@@ -23,14 +32,12 @@ import numpy as np
 import onnxruntime as ort
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_photos import MAX_WIDTH, SRC, trim_letterbox  # noqa: E402
+from build_photos import NATIVE_ENOUGH, SRC, UHD_LONG, trim_letterbox, uhd_size  # noqa: E402
 
 OUT = SRC.parent / "photos-upscaled"
 TILE = 128
 OVERLAP = 16
 SCALE = 4
-UPSCALE_BELOW = 1440
-NATIVE_ENOUGH = 1600
 
 
 def feather(size: int, overlap: int) -> np.ndarray:
@@ -84,11 +91,13 @@ def upscale(session: ort.InferenceSession, img: np.ndarray) -> np.ndarray:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
-    parser.add_argument("--below", type=int, default=UPSCALE_BELOW, help="upscale originals narrower than this many pixels")
+    parser.add_argument("--threads", type=int, default=0, help="CPU threads for this process (0 uses them all)")
     parser.add_argument("names", nargs="*")
     args = parser.parse_args()
 
-    session = ort.InferenceSession(args.model, providers=["CPUExecutionProvider"])
+    options = ort.SessionOptions()
+    options.intra_op_num_threads = args.threads
+    session = ort.InferenceSession(args.model, options, providers=["CPUExecutionProvider"])
     OUT.mkdir(parents=True, exist_ok=True)
     wanted = set(args.names)
 
@@ -98,18 +107,24 @@ def main() -> None:
             continue
         img = trim_letterbox(cv2.imread(str(path)))
         h, w = img.shape[:2]
-        # The model is fed at MAX_WIDTH / 4 (540px), so wide sources would lose more detail than it adds.
-        if w >= args.below or w >= NATIVE_ENOUGH:
-            print(f"skip {name}: already {w}px wide")
+        if max(w, h) >= UHD_LONG * NATIVE_ENOUGH:
+            print(f"skip {name}: {w}x{h} is close enough to 4K to resize")
             continue
-        if (OUT / f"{name}.png").exists():
+        done = cv2.imread(str(OUT / f"{name}.png"))
+        if done is not None and max(done.shape[:2]) >= UHD_LONG:
             print(f"skip {name}: already upscaled")
             continue
-        # Feed at target/4 so the output lands near MAX_WIDTH without wasted tiles.
-        in_w = min(w, MAX_WIDTH // SCALE)
-        small = cv2.resize(img, (in_w, round(h * in_w / w)), interpolation=cv2.INTER_AREA) if in_w < w else img
-        print(f"{name}: {w}x{h} -> input {small.shape[1]}x{small.shape[0]}", flush=True)
-        big = upscale(session, small)
+        target = uhd_size(w, h)
+        quarter, half = target[0] // SCALE, target[0] // 2
+        if w < quarter:
+            feed = cv2.resize(img, (quarter, round(h * quarter / w)), interpolation=cv2.INTER_LANCZOS4)
+        elif w > half:
+            feed = cv2.resize(img, (half, round(h * half / w)), interpolation=cv2.INTER_AREA)
+        else:
+            feed = img
+        print(f"{name}: {w}x{h} -> input {feed.shape[1]}x{feed.shape[0]}", flush=True)
+        big = upscale(session, feed)
+        big = cv2.resize(big, target, interpolation=cv2.INTER_AREA if big.shape[1] > target[0] else cv2.INTER_LANCZOS4)
         cv2.imwrite(str(OUT / f"{name}.png"), big)
         print(f"  saved {big.shape[1]}x{big.shape[0]}", flush=True)
 

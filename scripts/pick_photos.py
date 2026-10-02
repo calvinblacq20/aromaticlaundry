@@ -1,7 +1,9 @@
 """Crop the chosen stills out of the shop's TikTok videos into brand/photos-original/.
 
-Almost every photo on the site is a frame from @aromatic.laundry1; the two exceptions (kente cloth,
-which the shop hasn't filmed yet, and the mall itself) are freely licensed photos in brand/internet/. Most of the shop's videos carry a
+The shop's own work is all frames from @aromatic.laundry1. Garments and household items the shop hasn't
+filmed yet (kente, agbada, kaftans, dresses, trousers, blazers, bedsheets, curtains, towels) and the
+mall itself are freely licensed photos in brand/internet/; those are written as JPEG at no more than
+4K, since their full-size sources are much larger than the site ever needs. Most of the shop's videos carry a
 caption burned into the top of the frame ("Call/Text 0548908101", "POV: ..."), so each pick says
 which part of the frame to keep: `top` and `bottom` are fractions of the frame height, `left` and
 `right` fractions of its width. The crop is then trimmed to the photo's aspect ratio around the
@@ -72,9 +74,22 @@ class Still:
 
 #: Freely licensed photos in brand/internet/ (sources and licences in docs/photo-sources.md).
 STILLS = [
-    Still("kente", "kente-volta.jpg", top=0.0, bottom=0.62, ratio=4 / 5),
+    Still("kente", "kente-volta.jpg", top=0.02, bottom=0.89, ratio=4 / 5),
     Still("west-hills-mall", "west-hills-mall.jpg", top=0.12, bottom=0.98, ratio=3 / 2),
+    # The Unsplash License doesn't cover the likeness of recognisable people, so photos of people are
+    # cropped to the garment, below the face (which also drops a bank's sign behind the kaftan).
+    Still("trousers", "unsplash-trousers-clem-onojeghuo.jpg", top=0.26, bottom=0.95, ratio=4 / 5),
+    Still("dress", "unsplash-dress-eduardo-espinoza.jpg", top=0.54, left=0.25, right=0.91, ratio=4 / 5),
+    Still("kaftan", "unsplash-kaftan-shedrack-salami.jpg", top=0.305, ratio=4 / 5),
+    Still("blazer", "unsplash-blazer-vetrivel-viswanathar.jpg", top=0.05, bottom=0.88, ratio=4 / 5),
+    Still("agbada", "unsplash-agbada-olumide-adekunle.jpg", top=0.385, ratio=4 / 5),
+    Still("bedsheets", "unsplash-bedsheets-bymatter.jpg", top=0.17, ratio=4 / 5),
+    Still("curtains", "unsplash-curtains-dimas-anggara.jpg", top=0.08, bottom=0.91, ratio=4 / 5),
+    Still("towels", "unsplash-towels-mads-leif-hansen.jpg", right=0.6, ratio=4 / 5),
 ]
+
+#: Long side of a 4K UHD frame. Stills bigger than this are scaled down to it.
+STILL_MAX = 3840
 
 
 def frame_at(video: str, t: float) -> np.ndarray:
@@ -140,7 +155,13 @@ def main() -> None:
         if source is None:
             raise SystemExit(f"Missing brand/internet/{still.file}")
         img = crop(source, still)
-        cv2.imwrite(str(OUT / f"{still.name}.png"), img)
+        h, w = img.shape[:2]
+        if max(h, w) > STILL_MAX:
+            scale = STILL_MAX / max(h, w)
+            img = cv2.resize(img, (round(w * scale), round(h * scale)), interpolation=cv2.INTER_AREA)
+        # build_photos.py reads both .png and .jpg, so a stale copy in the other format would build twice.
+        (OUT / f"{still.name}.png").unlink(missing_ok=True)
+        cv2.imwrite(str(OUT / f"{still.name}.jpg"), img, [cv2.IMWRITE_JPEG_QUALITY, 95])
         print(f"{still.name}: {img.shape[1]}x{img.shape[0]} from brand/internet/{still.file}")
 
 
