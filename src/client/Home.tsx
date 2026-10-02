@@ -1,4 +1,4 @@
-import { Check, Clock, Droplet, Gift, Heart, MapPin, MessageCircle, Pause, Phone, Play, Share2, Shirt, Sparkles, Truck, Wallet, WashingMachine } from "lucide-react";
+import { Check, Clock, Droplet, Gift, MapPin, MessageCircle, Pause, Phone, Play, Shirt, Sparkles, Truck, Wallet, WashingMachine } from "lucide-react";
 import { TikTokIcon } from "../components/SocialIcons";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -11,6 +11,7 @@ import { Marquee } from "../components/Marquee";
 import { Reveal } from "../components/Reveal";
 import { CountUp, ScrollRevealText, useScrollTo } from "../components/Scroll";
 import { ClosingCta } from "./home/ClosingCta";
+import { ContactDock } from "./home/ContactDock";
 import { EditorialHero } from "./home/EditorialHero";
 import { HeroBar } from "./home/HeroBar";
 import { HowItWorks } from "./home/HowItWorks";
@@ -155,32 +156,16 @@ function ShopPage() {
   goToRef.current = goTo;
   const seePrices = useCallback(() => goToRef.current("prices"), []);
 
-  const actionButtons = (
-    <>
-      <button className="icon-btn" onClick={share} aria-label="Share the shop">
-        <Share2 size={18} strokeWidth={1.8} />
-      </button>
-      <motion.button className={`icon-btn ${saved ? "is-on" : ""}`} onClick={() => setSaved(!saved)} aria-pressed={saved} aria-label="Save the shop" whileTap={{ scale: 0.85 }} transition={spring.press}>
-        <Heart size={18} strokeWidth={1.8} fill={saved ? "currentColor" : "none"} />
-      </motion.button>
-    </>
-  );
-
   return (
     <main className="screen shop">
-      {/* Phone: sticky header that appears once the hero scrolls away */}
+      {/* Phone: sticky header that appears once the hero scrolls away (share and save float in the dock) */}
       <div className="overlay-header mobile-only">
         <AnimatePresence>
           {showHeader && (
             <motion.div className="overlay-header-inner" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={spring.micro}>
-              <div className="between" style={{ padding: "10px 16px 4px" }}>
-                <div className="inline" style={{ gap: 10 }}>
-                  <AppIcon size={30} />
-                  <span className="t-title">{SHOP.name}</span>
-                </div>
-                <div className="inline" style={{ gap: 8 }}>
-                  {actionButtons}
-                </div>
+              <div className="inline" style={{ gap: 10, padding: "10px 16px 4px" }}>
+                <AppIcon size={30} />
+                <span className="t-title">{SHOP.name}</span>
               </div>
               <nav className="section-tabs" aria-label="Shop sections">
                 {SECTIONS.map((s) => (
@@ -195,11 +180,14 @@ function ShopPage() {
         </AnimatePresence>
       </div>
 
-      {/* Opening slideshow, with the shop's bar (links, WhatsApp, call, share, save) across its top */}
+      {/* Opening slideshow, with the shop's name and page links across its top */}
       <div ref={heroRef} className="hero-wrap">
         <EditorialHero onSeePrices={seePrices} />
-        <HeroBar saved={saved} onSave={() => setSaved(!saved)} onShare={share} onSection={goTo} />
+        <HeroBar onSection={goTo} />
       </div>
+
+      {/* WhatsApp, call, share and save, floating at the bottom right while the page scrolls */}
+      <ContactDock saved={saved} onSave={() => setSaved(!saved)} onShare={share} />
 
       {/* Intro sheet */}
       <motion.section className="intro" {...enter(24)}>
@@ -211,9 +199,6 @@ function ShopPage() {
           <div className="inline" style={{ gap: 8 }}>
             <span className="pill-tag" title="Figures in this preview are samples">
               Demo
-            </span>
-            <span className="inline desktop-only" style={{ gap: 8 }}>
-              {actionButtons}
             </span>
           </div>
         </div>
