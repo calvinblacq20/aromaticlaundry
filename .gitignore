@@ -1,0 +1,18 @@
+node_modules
+dist
+coverage
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+__pycache__
+
+# Upscaling intermediates (large PNGs; rebuild with scripts/upscale_photos.py)
+brand/photos-upscaled/
+
+# Video stills (large PNGs; rebuild with scripts/extract_frames.py)
+brand/frames/
+
+# Downloader metadata (carries session cookies)
+*.info.json

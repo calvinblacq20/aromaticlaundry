@@ -1,0 +1,94 @@
+/*
+ * Design tokens: the house layout system (docs/design-reference.md), in the same neutrals as the
+ * other shops on this system (cool grey ground, near-black ink, shared pastel slots) with this
+ * shop's own brand colour in every accent slot. Aqua is that accent: the water in the price list
+ * artwork, always a fill under ink text (9.5:1). Blue, sampled from the "Aromatic" wordmark on the
+ * same price list, is the logo and takes white text (7.5:1) for solid buttons. Light-only by design.
+ */
+:root {
+  color-scheme: light;
+
+  --ground: #ebeff5;
+  --surface: #ffffff;
+  --ink: #242426;
+  --ink-75: rgba(36, 36, 38, 0.75);
+  --ink-50: rgba(36, 36, 38, 0.5);
+  --ink-25: rgba(36, 36, 38, 0.25);
+  --ink-12: rgba(36, 36, 38, 0.12);
+  --ink-06: rgba(36, 36, 38, 0.06);
+  --charcoal: #35363b;
+  --graphite: #4d4f57;
+  --white-75: rgba(255, 255, 255, 0.75);
+  --white-50: rgba(255, 255, 255, 0.5);
+  --glass: rgba(255, 255, 255, 0.8);
+
+  /* The brand pair: blue from the "Aromatic" wordmark, aqua from the water in the price list artwork. */
+  --blue: #0a4fb4;
+  --blue-wash: #e2ecfb;
+  --aqua: #7ad7f0;
+  --aqua-wash: #e3f7fc;
+  --lilac: #c0adff;
+  --sky: #b8deff;
+  --blush: #fae9e6;
+  --sand: #e0c5b6;
+  --steel: #a5b2cf;
+  --mist: #d9d5dc;
+  --slate: #58718a;
+
+  /* Semantic, used only for state. */
+  /* 4.8:1 on the cool ground, so "Open now" passes AA at 12px. */
+  --open: #23784a;
+  --danger: #c8412b;
+  --danger-wash: #fbe7e2;
+  --warning-ink: #8a4b1f;
+
+  --font: "Inter", "Inter Display", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Radius scale tightened at the client's request: crisper cards and image frames
+     than the Makro originals (4/8/10/12/16/20/24/40). Pills stay fully round. */
+  --r-4: 3px;
+  --r-8: 5px;
+  --r-10: 6px;
+  --r-12: 7px;
+  --r-16: 8px;
+  --r-20: 10px;
+  --r-24: 12px;
+  --r-40: 14px;
+  --r-pill: 500px;
+  --r-img: 8px;
+
+  --sh-soft: 0 0.6px 0.6px -1.25px rgba(0, 0, 0, 0.09), 0 2.29px 2.29px -2.5px rgba(0, 0, 0, 0.08), 0 10px 10px -3.75px rgba(0, 0, 0, 0.03);
+  --sh-float: 0 0.64px 1.15px -0.81px rgba(36, 62, 110, 0.11), 0 1.93px 3.48px -1.63px rgba(36, 62, 110, 0.11), 0 5.1px 9.19px -2.44px rgba(36, 62, 110, 0.1), 0 16px 28.8px -3.25px rgba(36, 62, 110, 0.06);
+  --sh-deep: 0 0.81px 0.81px -0.47px rgba(28, 42, 72, 0.19), 0 1.91px 1.91px -0.94px rgba(28, 42, 72, 0.18), 0 3.49px 3.49px -1.41px rgba(28, 42, 72, 0.18), 0 5.79px 5.79px -1.88px rgba(28, 42, 72, 0.17), 0 9.36px 9.36px -2.34px rgba(28, 42, 72, 0.16), 0 15.32px 15.32px -2.81px rgba(28, 42, 72, 0.15), 0 26.38px 26.38px -3.28px rgba(28, 42, 72, 0.12), 0 48px 48px -3.75px rgba(28, 42, 72, 0.06);
+  --sh-chip: 0 4px 8px rgba(0, 0, 0, 0.25);
+
+  --glow: radial-gradient(134% 100% at 50% 0%, #ffffff 0%, #ebeff5 100%);
+  --fade: linear-gradient(#ffffff 0%, #ebeff5 100%);
+
+  --z-sticky: 10;
+  --z-tabbar: 20;
+  --z-sheet: 40;
+  --z-toast: 50;
+  --z-overlay: 60;
+
+  --app-w: 480px;
+  /* Never less than the notch: in landscape iPhones report a side inset (viewport-fit=cover). */
+  --gutter: max(16px, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+  --nav-h: 0px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/*
+ * Status, money and trend labels are coloured words, not pills. Each pill colour is deepened just
+ * enough to read on white and on the ground (4.5:1 or more). Dark surfaces switch back to the bright
+ * colours (ui.css), like the selected date's month.
+ */
+:root {
+  --label-aqua: #086a87;
+  --label-sand: var(--warning-ink);
+  --label-sky: #1a63a8;
+  --label-lilac: #5a3ec8;
+  --label-mist: #6b6470;
+  --label-danger: #b83a26;
+}
