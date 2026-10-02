@@ -23,8 +23,8 @@ import { MoneyTag } from "../orderActions";
 import { AdminPage, EmptyState } from "../Shell";
 
 const TODAY_METRICS: MetricId[] = ["cash", "newOrders", "owed", "collected"];
-export const INK = "#242426";
-export const PREVIOUS = "rgba(36, 36, 38,0.5)";
+export const INK = "#0b1f4f";
+export const PREVIOUS = "rgba(13, 19, 33, 0.5)";
 
 export const PURPOSE_LABEL: Record<Appointment["purpose"], string> = { pickup: "Rider pickup", delivery: "Delivery" };
 

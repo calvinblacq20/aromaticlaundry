@@ -31,7 +31,7 @@
   transition: color 0.2s;
 }
 .section-tab.is-active { color: var(--ink); font-weight: 500; }
-.section-underline { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--ink); }
+.section-underline { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--navy); }
 .anchor { scroll-margin-top: 112px; }
 
 
@@ -266,7 +266,7 @@
 .account-card .muted { color: var(--white-75); }
 .account-card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .flow-progress span { height: 3px; border-radius: 3px; background: var(--ink-12); overflow: hidden; }
-.flow-progress span i { display: block; height: 100%; background: var(--ink); transform-origin: left; }
+.flow-progress span i { display: block; height: 100%; background: var(--navy); transform-origin: left; }
 .selected-pill {
   position: fixed;
   top: 124px;
@@ -309,7 +309,7 @@
   transition: box-shadow 0.2s, background-color 0.2s;
 }
 .option small { font-size: 11px; color: var(--ink-50); }
-.option.is-selected { background: var(--ink); color: #fff; }
+.option.is-selected { background: var(--navy); color: #fff; }
 .option.is-selected small { color: var(--white-75); }
 .upload {
   display: flex;

@@ -1,32 +1,38 @@
 /*
- * Design tokens: the house layout system (docs/design-reference.md), in the same neutrals as the
- * other shops on this system (cool grey ground, near-black ink, shared pastel slots) with this
- * shop's own brand colour in every accent slot. Aqua is that accent: the water in the price list
- * artwork, always a fill under ink text (9.5:1). Blue, sampled from the "Aromatic" wordmark on the
- * same price list, is the logo and takes white text (7.5:1) for solid buttons. Light-only by design.
+ * Design tokens: the house layout system (docs/design-reference.md) in the shop logo's colours.
+ * Navy (the "AROMATIC" wordmark) is every dark surface: buttons, bands, selected states, under
+ * white text (15.9:1). Gold (the "LAUNDRY" wordmark and folded stack) is the one bright accent,
+ * always a fill under ink text (10:1). Royal is for links and active text (7.8:1 on the ground).
+ * Text is near-black on a crisp cool ground; every grey used for text clears 4.5:1. Light-only.
  */
 :root {
   color-scheme: light;
 
-  --ground: #ebeff5;
+  --ground: #f2f4f8;
   --surface: #ffffff;
-  --ink: #242426;
-  --ink-75: rgba(36, 36, 38, 0.75);
-  --ink-50: rgba(36, 36, 38, 0.5);
-  --ink-25: rgba(36, 36, 38, 0.25);
-  --ink-12: rgba(36, 36, 38, 0.12);
-  --ink-06: rgba(36, 36, 38, 0.06);
-  --charcoal: #35363b;
-  --graphite: #4d4f57;
+  --ink: #0d1321;
+  /* Named by level, tuned for contrast: 75 is 9.4:1 and 50 is 5.4:1 on the ground. */
+  --ink-75: rgba(13, 19, 33, 0.8);
+  --ink-50: rgba(13, 19, 33, 0.64);
+  --ink-25: rgba(13, 19, 33, 0.25);
+  --ink-12: rgba(13, 19, 33, 0.12);
+  --ink-06: rgba(13, 19, 33, 0.06);
+  /* Dark cards a step lighter than the navy buttons, so a button still stands out on one. */
+  --charcoal: #13285f;
+  --graphite: #24407f;
   --white-75: rgba(255, 255, 255, 0.75);
   --white-50: rgba(255, 255, 255, 0.5);
   --glass: rgba(255, 255, 255, 0.8);
 
-  /* The brand pair: blue from the "Aromatic" wordmark, aqua from the water in the price list artwork. */
-  --blue: #0a4fb4;
-  --blue-wash: #e2ecfb;
-  --aqua: #7ad7f0;
-  --aqua-wash: #e3f7fc;
+  /* The logo's colours. */
+  --navy: #0b1f4f;
+  --royal: #1340b8;
+  --gold: #f5b301;
+  --gold-wash: #fff3cc;
+  /* The accent slot keeps its old name (it is in button variants, badge tones and saved catalog
+     data); it holds the logo's gold now. */
+  --aqua: var(--gold);
+  --aqua-wash: var(--gold-wash);
   --lilac: #c0adff;
   --sky: #b8deff;
   --blush: #fae9e6;
@@ -36,8 +42,8 @@
   --slate: #58718a;
 
   /* Semantic, used only for state. */
-  /* 4.8:1 on the cool ground, so "Open now" passes AA at 12px. */
-  --open: #23784a;
+  /* 5.9:1 on the ground, so "Open now" passes AA at 12px. */
+  --open: #1b6b3f;
   --danger: #c8412b;
   --danger-wash: #fbe7e2;
   --warning-ink: #8a4b1f;
@@ -63,8 +69,8 @@
   --sh-deep: 0 0.81px 0.81px -0.47px rgba(28, 42, 72, 0.19), 0 1.91px 1.91px -0.94px rgba(28, 42, 72, 0.18), 0 3.49px 3.49px -1.41px rgba(28, 42, 72, 0.18), 0 5.79px 5.79px -1.88px rgba(28, 42, 72, 0.17), 0 9.36px 9.36px -2.34px rgba(28, 42, 72, 0.16), 0 15.32px 15.32px -2.81px rgba(28, 42, 72, 0.15), 0 26.38px 26.38px -3.28px rgba(28, 42, 72, 0.12), 0 48px 48px -3.75px rgba(28, 42, 72, 0.06);
   --sh-chip: 0 4px 8px rgba(0, 0, 0, 0.25);
 
-  --glow: radial-gradient(134% 100% at 50% 0%, #ffffff 0%, #ebeff5 100%);
-  --fade: linear-gradient(#ffffff 0%, #ebeff5 100%);
+  --glow: radial-gradient(134% 100% at 50% 0%, #ffffff 0%, #f2f4f8 100%);
+  --fade: linear-gradient(#ffffff 0%, #f2f4f8 100%);
 
   --z-sticky: 10;
   --z-tabbar: 20;
@@ -85,7 +91,7 @@
  * colours (ui.css), like the selected date's month.
  */
 :root {
-  --label-aqua: #086a87;
+  --label-aqua: var(--royal);
   --label-sand: var(--warning-ink);
   --label-sky: #1a63a8;
   --label-lilac: #5a3ec8;

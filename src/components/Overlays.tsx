@@ -70,7 +70,7 @@ export function SuccessScreen({ open, title, tone = "success", onDone }: Success
   const blobs =
     tone === "success"
       ? [
-          { c: "#7ad7f0", x: "-20%", y: "-10%", s: "70vmax" },
+          { c: "#f7c948", x: "-20%", y: "-10%", s: "70vmax" },
           { c: "#c0adff", x: "35%", y: "30%", s: "65vmax" },
           { c: "#b8deff", x: "-10%", y: "55%", s: "55vmax" },
         ]

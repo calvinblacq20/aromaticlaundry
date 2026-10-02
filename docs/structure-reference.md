@@ -1,6 +1,6 @@
 # Structure reference: Fresha client app
 
-> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the system's ink `#242426` on cool grey `#EBEFF5`, with blue `#0A4FB4` from the shop's wordmark as the logo and solid buttons, and aqua `#7AD7F0` from its price list as the one accent, called `aqua` in code where the tailor build said `lime`; see `src/styles/tokens.css`), the washer mark (`src/components/Brand.tsx`), and the vocabulary:
+> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the logo's navy `#0B1F4F` for buttons, dark bands and selected states, and its gold `#F5B301` as the one accent, called `aqua` in code where the tailor build said `lime`; near-black ink `#0D1321` on cool grey `#F2F4F8`; see `src/styles/tokens.css`), the logo emblem (`src/components/Brand.tsx`), and the vocabulary:
 >
 > | Tailor build | Aromatic Laundry |
 > |---|---|

@@ -24,7 +24,7 @@
   flex-direction: column;
   align-items: center;
   padding: calc(12px + env(safe-area-inset-top, 0px)) var(--gutter) 108px;
-  background-color: var(--ink);
+  background-color: var(--navy);
   color: #fff;
 }
 .auth-top.is-bar { padding-bottom: 84px; }
@@ -41,7 +41,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(36, 36, 38, 0.5) 0%, rgba(36, 36, 38, 0.72) 55%, rgba(36, 36, 38, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(11, 31, 79, 0.5) 0%, rgba(11, 31, 79, 0.74) 55%, rgba(11, 31, 79, 0.92) 100%);
 }
 .auth-name { margin-top: 14px; font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
 .auth-tagline { margin-top: 2px; font-size: 13px; color: rgba(255, 255, 255, 0.75); }
