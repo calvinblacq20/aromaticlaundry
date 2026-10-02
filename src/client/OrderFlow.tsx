@@ -1236,8 +1236,8 @@ function Review(r: ReviewProps) {
               <Sparkles size={18} />
             </span>
             <span className="grow stack">
-              <span className="t-title">Use {r.points} loyalty points</span>
-              <span className="subtle t-cap">Up to {money(Math.floor(r.points / 10))} off, max 10% of the order</span>
+              <span className="t-title">Use your loyalty points</span>
+              <span className="subtle t-cap">You have {r.points}. Every 10 points take GH₵ 1 off, up to 10% of the order, and only the points used are spent.</span>
             </span>
             <span className={`check ${r.usePoints ? "is-on" : "is-add"}`} aria-hidden="true">
               {r.usePoints && <Check size={16} strokeWidth={2.4} />}

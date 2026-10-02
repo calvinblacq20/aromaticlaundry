@@ -1,11 +1,11 @@
 import { useSyncExternalStore } from "react";
 import { checkCode, CODE_TTL_MS, findOrder, paymentKindFor, paystackReference, samePhone, upsertCustomer, type Access, type CodeCheck, type PendingCode } from "../lib/checkout";
-import { dayKey, localIso, money } from "../lib/format";
+import { dayKey, localIso, money, parseLocal } from "../lib/format";
 import { orderNumber, receiptNumber } from "../lib/receipts";
 import { normalizeGhPhone } from "../lib/contact";
 import { balanceDue, canCancel, isActive, validatePayment } from "../lib/orders";
 import { activeSubscription, addMonth, planStatus, renewedPeriod } from "../lib/plans";
-import { readyTime } from "../lib/schedule";
+import { readyTime, RIDER_CAPACITY, RIDER_NOTICE_MS } from "../lib/schedule";
 import { turnaroundHours } from "../lib/pricing";
 import { validateExpense } from "../lib/spend";
 import { applySettings, cloneSettings, defaultSettings, HOURS, RULES, type ShopSettings } from "./business";
@@ -92,6 +92,15 @@ function publish(data: AppData) {
 let state: AppData = load();
 publish(state);
 const listeners = new Set<() => void>();
+const saveFailedListeners = new Set<() => void>();
+
+/** Called when a change couldn't be written to this browser (storage full or blocked), so the screen can say so. */
+export function onSaveFailed(listener: () => void) {
+  saveFailedListeners.add(listener);
+  return () => {
+    saveFailedListeners.delete(listener);
+  };
+}
 
 function commit(next: AppData) {
   state = next;
@@ -100,6 +109,7 @@ function commit(next: AppData) {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch (error) {
     console.warn("Could not save demo data.", error);
+    saveFailedListeners.forEach((listener) => listener());
   }
   listeners.forEach((listener) => listener());
 }
@@ -171,6 +181,22 @@ function paymentFor(data: AppData, order: Order, pay: OnlinePayment, now: Date):
 
 const withPayment = (order: Order, payment: Payment): Order => ({ ...order, payments: [...order.payments, payment] });
 
+/* ---------------- Rider windows ---------------- */
+
+/**
+ * Re-checks a rider window when the booking lands. The screen that offered it may have been open
+ * for hours, or open on two phones at once, so the store is the one that says no.
+ */
+function windowProblem(data: AppData, start: string, purpose: "pickup" | "delivery", now: Date, notice = true): string | null {
+  if (notice && parseLocal(start).getTime() < now.getTime() + RIDER_NOTICE_MS) return `That ${purpose} window is too soon now. Pick a later one.`;
+  const taken = data.appointments.filter((a) => a.start === start && a.status !== "cancelled" && a.status !== "done").length;
+  return taken >= RIDER_CAPACITY ? `That ${purpose} window just filled up. Pick another.` : null;
+}
+
+/** A cancelled order frees every rider run it still holds, including one already under way. */
+const releaseWindows = (appointments: Appointment[], orderId: string) =>
+  appointments.map((a) => (a.orderId === orderId && a.status !== "done" && a.status !== "cancelled" ? { ...a, status: "cancelled" as const } : a));
+
 /* ---------------- One-time codes (demo: shown as a notification instead of a WhatsApp message) ---------------- */
 
 let pendingCode: PendingCode | null = null;
@@ -209,9 +235,23 @@ export const actions = {
   placeOrder(draft: OrderDraft, now = new Date()): { order: Order; payment?: Payment } | { error: string } {
     const items = draft.items.filter((i) => i.qty > 0);
     if (!items.length) return { error: "Add at least one service." };
+    if (draft.intake === "pickup") {
+      const problem = windowProblem(state, draft.inAt, "pickup", now);
+      if (problem) return { error: problem };
+    } else if (parseLocal(draft.inAt) < now) {
+      return { error: "That drop-off time has passed. Pick a later one." };
+    }
+    if (draft.handback === "delivery" && draft.deliveryStart) {
+      if (draft.deliveryStart < draft.readyAt) return { error: "That delivery window is before your laundry is ready. Pick a later one." };
+      const problem = windowProblem(state, draft.deliveryStart, "delivery", now);
+      if (problem) return { error: problem };
+    }
     const { customers: upserted, customer: base } = upsertCustomer(state.customers, draft.contact, { customerId: state.session.customerId, now, newId: () => newId("c") });
-    const customer = draft.saveCare ? { ...base, care: { ...draft.care } } : base;
-    const customers = draft.saveCare ? upserted.map((c) => (c.id === customer.id ? customer : c)) : upserted;
+    // Points pay for the discount: 10 points take GH₵ 1 off, so they're spent once.
+    const pointsSpent = Math.round(Math.max(0, draft.discount) * 10);
+    if (pointsSpent > 0 && (!state.session.customerId || pointsSpent > base.points)) return { error: "You don't have enough points for that discount." };
+    const customer = { ...base, points: base.points - pointsSpent, ...(draft.saveCare ? { care: { ...draft.care } } : {}) };
+    const customers = upserted.map((c) => (c.id === customer.id ? customer : c));
 
     let subscriptionId: string | undefined;
     if (draft.payChoice === "plan") {
@@ -299,11 +339,10 @@ export const actions = {
   cancelOrder(orderId: string, now = new Date()) {
     const order = state.orders.find((o) => o.id === orderId);
     if (!order || !canCancel(order)) return;
-    const nowIso = localIso(now);
     commit({
       ...state,
       orders: state.orders.map((o) => (o.id === orderId ? { ...o, status: "cancelled", history: [...o.history, { status: "cancelled", at: now.toISOString() }] } : o)),
-      appointments: state.appointments.map((a) => (a.orderId === orderId && a.start > nowIso && a.status !== "done" ? { ...a, status: "cancelled" } : a)),
+      appointments: releaseWindows(state.appointments, orderId),
     });
   },
 
@@ -560,7 +599,7 @@ const MAX_PHOTOS = 4;
 /** What the owner does from the admin side. Each returns an error message instead of throwing. */
 export const shop = {
   /** Opens the bag at the counter: count, notes and photos, the final price, and the clock starts. */
-  checkIn(orderId: string, draft: CheckInDraft, now = new Date()): Result<{ order: Order }> {
+  checkIn(orderId: string, draft: CheckInDraft, now = new Date()): Result<{ order: Order; deliveryTooEarly: boolean }> {
     const order = findOrderById(orderId);
     if (!order) return { error: "We couldn't find that order." };
     if (order.status !== "booked") return { error: "This order is already checked in." };
@@ -574,12 +613,19 @@ export const shop = {
     // The promise starts when the clothes reach the counter, not when the order was booked.
     const readyAt = localIso(readyTime(now, turnaroundHours(order.items), order.speed === "express", RULES.expressHours, HOURS));
     const next = withStatus({ ...order, checkIn, total, readyAt }, "received", now);
+    // A late pickup can push the ready time past the delivery window the client chose: that window goes back to the owner to rebook.
+    const delivery = state.appointments.find((a) => a.id === order.deliveryId && a.status !== "cancelled" && a.status !== "done");
+    const deliveryTooEarly = Boolean(delivery && delivery.start < readyAt);
     commit({
       ...state,
       orders: updateOrder(orderId, () => next),
-      appointments: state.appointments.map((a) => (a.id === order.pickupId && a.status !== "cancelled" ? { ...a, status: "done" } : a)),
+      appointments: state.appointments.map((a) => {
+        if (a.id === order.pickupId && a.status !== "cancelled") return { ...a, status: "done" };
+        if (deliveryTooEarly && a.id === delivery?.id) return { ...a, status: "requested" };
+        return a;
+      }),
     });
-    return { order: next };
+    return { order: next, deliveryTooEarly };
   },
 
   /** Moves an order to another stage. Handing over needs the balance paid unless the owner allows it. */
@@ -613,17 +659,16 @@ export const shop = {
     return { payment: result.payment };
   },
 
-  /** The owner can cancel at any stage; upcoming rider windows for the order are cancelled too. */
+  /** The owner can cancel at any stage; any rider run the order still holds is cancelled too. */
   cancel(orderId: string, now = new Date()): Result<{ order: Order }> {
     const order = findOrderById(orderId);
     if (!order) return { error: "We couldn't find that order." };
     if (!isActive(order)) return { error: "This order is already closed." };
     const next = withStatus(order, "cancelled", now);
-    const nowIso = localIso(now);
     commit({
       ...state,
       orders: updateOrder(orderId, () => next),
-      appointments: state.appointments.map((a) => (a.orderId === orderId && a.start > nowIso && a.status !== "done" ? { ...a, status: "cancelled" } : a)),
+      appointments: releaseWindows(state.appointments, orderId),
     });
     return { order: next };
   },
@@ -794,6 +839,11 @@ export const shop = {
     const orderId = newId("o");
     const deliveryId = draft.handback === "delivery" && draft.deliveryStart ? newId("a") : undefined;
     const readyAt = localIso(readyTime(now, turnaroundHours(items), draft.speed === "express", RULES.expressHours, HOURS));
+    if (draft.handback === "delivery" && draft.deliveryStart) {
+      if (draft.deliveryStart < readyAt) return { error: "That delivery window is before it's ready. Pick a later one." };
+      const problem = windowProblem(state, draft.deliveryStart, "delivery", now);
+      if (problem) return { error: problem };
+    }
     let order: Order = {
       id: orderId,
       number: orderNumber(state.counters.order),

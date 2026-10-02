@@ -1,7 +1,7 @@
 import { ZONES } from "../data/business";
 import { CATEGORIES, serviceById } from "../data/catalog";
 import type { CategoryId, Customer, LeadSource, Order, OrderStatus, Payment, PaymentMethod } from "../data/types";
-import { addDays, dayKey, fmtDayShort, monthShort, parseLocal, startOfDay } from "./format";
+import { addDays, dayKey, monthShort, parseLocal, startOfDay } from "./format";
 import { IN_SHOP, isInShop, isLate } from "./orders";
 import { METHOD_LABEL, SOURCE_LABEL } from "./shop";
 
@@ -220,28 +220,6 @@ export function floorNow(orders: Order[], now: Date): Floor {
     arrivingToday: orders.filter((o) => o.status === "booked" && o.inAt.slice(0, 10) === today).length,
     express: shop.filter((o) => o.speed === "express").length,
   };
-}
-
-export interface WorkloadDay {
-  date: Date;
-  label: string;
-  count: number;
-  closed: boolean;
-}
-
-/** Laundry coming in each day over the coming days: booked pickups and drop-offs. */
-export function workload(orders: Order[], now: Date, days = 7): WorkloadDay[] {
-  const today = startOfDay(now);
-  return Array.from({ length: days }, (_, i) => {
-    const date = addDays(today, i);
-    const key = dayKey(date);
-    return {
-      date,
-      label: i === 0 ? "Today" : fmtDayShort(date),
-      count: orders.filter((o) => o.status === "booked" && o.inAt.slice(0, 10) === key).length,
-      closed: false,
-    };
-  });
 }
 
 export interface HourLoad {

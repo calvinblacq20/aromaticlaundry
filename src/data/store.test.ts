@@ -1,10 +1,17 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { visibleOrders } from "../lib/checkout";
-import { dayKey } from "../lib/format";
+import { addDays, dayKey, localIso, startOfDay } from "../lib/format";
 import { addMonth, planStatus } from "../lib/plans";
 import { DEFAULT_CARE } from "./catalog";
 import { DEMO_ACCOUNT_PHONE } from "./seed";
 import { accessOf, accountOf, accountPlanOf, actions, getAppData, type OrderDraft } from "./store";
+
+/** Local "YYYY-MM-DDTHH:mm" a few days from now, so the bookings never fall into the past. */
+const ahead = (days: number, hour: number) => {
+  const d = addDays(startOfDay(new Date()), days);
+  d.setHours(hour);
+  return localIso(d);
+};
 
 const draft = (overrides: Partial<OrderDraft> = {}): OrderDraft => ({
   items: [{ serviceId: "big-basket", qty: 1, unitPrice: 120 }],
@@ -13,9 +20,9 @@ const draft = (overrides: Partial<OrderDraft> = {}): OrderDraft => ({
   intake: "pickup",
   handback: "delivery",
   zoneId: "z-weija",
-  inAt: "2026-10-10T09:00",
-  readyAt: "2026-10-11T09:00",
-  deliveryStart: "2026-10-11T11:00",
+  inAt: ahead(3, 9),
+  readyAt: ahead(4, 9),
+  deliveryStart: ahead(4, 11),
   saveCare: false,
   contact: { name: "Ama Mensah", phone: "024 851 5773", email: "ama@gmail.com", town: "Gbawe", address: "Gbawe Zero, behind the Total station", digitalAddress: "" },
   remember: true,
@@ -55,8 +62,8 @@ describe("guest booking", () => {
     expect(data.customers.find((c) => c.id === order.customerId)).toMatchObject({ name: "Ama Mensah", hasAccount: false });
     const windows = data.appointments.filter((a) => a.orderId === order.id);
     expect(windows.map((a) => [a.purpose, a.start, a.status])).toEqual([
-      ["pickup", "2026-10-10T09:00", "requested"],
-      ["delivery", "2026-10-11T11:00", "requested"],
+      ["pickup", ahead(3, 9), "requested"],
+      ["delivery", ahead(4, 11), "requested"],
     ]);
     expect(data.device.orderIds).toEqual([order.id]);
     expect(data.device.contact?.name).toBe("Ama Mensah");
@@ -92,9 +99,19 @@ describe("guest booking", () => {
     expect(actions.payOrder("nope", pay(10))).toEqual({ error: "We couldn't find that order." });
   });
 
+  it("re-checks rider windows and times when the booking lands", () => {
+    const full = ahead(3, 13);
+    for (let i = 0; i < 3; i++) placed({ inAt: full, contact: { ...draft().contact, phone: `020 111 22${30 + i}` } });
+    expect(actions.placeOrder(draft({ inAt: full }))).toEqual({ error: "That pickup window just filled up. Pick another." });
+    const soon = new Date(Date.now() + 30 * 60_000);
+    expect(actions.placeOrder(draft({ inAt: localIso(soon) }))).toEqual({ error: "That pickup window is too soon now. Pick a later one." });
+    expect(actions.placeOrder(draft({ deliveryStart: ahead(4, 7) }))).toEqual({ error: "That delivery window is before your laundry is ready. Pick a later one." });
+    expect(actions.placeOrder(draft({ intake: "dropoff", inAt: ahead(-1, 10) }))).toEqual({ error: "That drop-off time has passed. Pick a later one." });
+  });
+
   it("cancels before the rider comes and releases both windows", () => {
     const { order } = placed();
-    actions.cancelOrder(order.id, new Date(2026, 9, 1, 9, 0));
+    actions.cancelOrder(order.id);
     const data = getAppData();
     expect(data.orders.find((o) => o.id === order.id)?.status).toBe("cancelled");
     expect(data.appointments.filter((a) => a.orderId === order.id).every((a) => a.status === "cancelled")).toBe(true);
@@ -139,6 +156,15 @@ describe("accounts", () => {
     actions.addOrderToDevice(order.id);
     actions.addOrderToDevice(order.id);
     expect(getAppData().device.orderIds).toEqual([order.id]);
+  });
+
+  it("spends loyalty points once, and only an account's own", () => {
+    expect(actions.placeOrder(draft({ discount: 5, total: 145 }))).toEqual({ error: "You don't have enough points for that discount." });
+    actions.logIn(DEMO_ACCOUNT_PHONE);
+    const before = accountOf(getAppData())!.points;
+    placed({ discount: 15, total: 135 });
+    expect(accountOf(getAppData())?.points).toBe(before - 150);
+    expect(actions.placeOrder(draft({ discount: 15, total: 135 }))).toEqual({ error: "You don't have enough points for that discount." });
   });
 
   it("saves how the client likes it done, but only for an account", () => {
@@ -191,12 +217,25 @@ describe("monthly plans", () => {
     expect(sub().endsAtRenewal).toBe(false);
     actions.cancelPlan("s-demo");
 
-    const renewsOn = sub().renewsOn;
     expect(actions.renewPlan("s-demo", pay(399))).toEqual({ error: "A month of Solo is GH₵ 400." });
     const renewed = actions.renewPlan("s-demo", pay(400));
     if ("error" in renewed) throw new Error(renewed.error);
-    expect(sub()).toMatchObject({ periodStart: renewsOn, endsAtRenewal: false });
+    expect(sub()).toMatchObject({ periodStart: dayKey(now()), renewsOn: dayKey(addMonth(now())), endsAtRenewal: false });
     expect(sub().payments).toHaveLength(2);
+  });
+
+  it("starts a fresh month on an early renewal, and every plan wash after it counts", () => {
+    actions.logIn(DEMO_ACCOUNT_PHONE);
+    const planDraft = { payChoice: "plan" as const, total: 0, riderFee: 0, planCover: 120 };
+    const left = () => planStatus(accountPlanOf(getAppData())!, getAppData().orders, now()).left;
+    while (left() > 0) placed(planDraft);
+    const renewed = actions.renewPlan("s-demo", pay(400));
+    if ("error" in renewed) throw new Error(renewed.error);
+    // Washes booked earlier today fall inside the new month too, so only what's genuinely left is offered.
+    const start = left();
+    expect(start).toBeLessThan(4);
+    placed(planDraft);
+    expect(left()).toBe(start - 1);
   });
 
   it("only touches the signed-in client's own plan", () => {

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Expense, Order, Subscription } from "../data/types";
 import { parseLocal } from "./format";
 import { activeFilterCount, clientRows, DEFAULT_CLIENT_FILTERS, DEFAULT_ORDER_FILTERS, filterClients, filterOrders, matchesQuery, orderFiltersToParams, parseOrderFilters, sortOrders, stageCounts } from "./filters";
-import { bucketsFor, compactMoney, delta, dueByHour, expressShare, floorNow, formatPercentChange, handoverShares, kpi, metricValue, owedAt, paymentsByMethod, periodRange, previousRange, statusAt, topServices, workload, zoneShares } from "./metrics";
+import { bucketsFor, compactMoney, delta, dueByHour, expressShare, floorNow, formatPercentChange, handoverShares, kpi, metricValue, owedAt, paymentsByMethod, periodRange, previousRange, statusAt, topServices, zoneShares } from "./metrics";
 import { basketsCheckedIn, dueQueue, floorLoad, nextStage, ownerBadge, ownerDateLine, ownerNextStep, renewalMessage, updateMessage } from "./shop";
 import { profitIn, spendByCategory, spendByKind, validateExpense } from "./spend";
 
@@ -95,8 +95,6 @@ describe("the floor", () => {
     const hours = dueByHour(orders, NOW);
     expect(hours.find((h) => h.hour === 13)?.count).toBe(1);
     expect(hours.find((h) => h.hour === 15)?.count).toBe(1);
-    const days = workload(orders, NOW, 7);
-    expect(days[0]).toMatchObject({ label: "Today", count: 1, closed: false });
   });
 
   it("counts baskets checked in on a day", () => {

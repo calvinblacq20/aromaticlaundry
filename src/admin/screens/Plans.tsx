@@ -10,8 +10,8 @@ import { planById } from "../../data/catalog";
 import { customerById, shop, useAppData } from "../../data/store";
 import type { PaymentMethod, Subscription } from "../../data/types";
 import { whatsappLink } from "../../lib/contact";
-import { dayKey, fmtDate, money, parseLocal, plural } from "../../lib/format";
-import { planStatus, type PlanStatus } from "../../lib/plans";
+import { fmtDate, money, parseLocal, plural } from "../../lib/format";
+import { planStatus, renewedPeriod, type PlanStatus } from "../../lib/plans";
 import { METHOD_LABEL, renewalMessage } from "../../lib/shop";
 import type { BadgeTone } from "../../lib/orders";
 import { CardHead } from "../controls";
@@ -165,7 +165,7 @@ export function Plans() {
             })}
           </div>
           <div className="adm-card-foot">
-            <span className="adm-meta">A renewal paid early starts the next month when the current one ends. One paid late starts it today.</span>
+            <span className="adm-meta">A renewal paid early starts a fresh month that day, and unused washes don't carry over. Up to a week late, the month carries on from the renewal day.</span>
           </div>
         </section>
       )}
@@ -243,7 +243,7 @@ function RenewalSheet({ subscription, onClose }: { subscription: Subscription | 
       {subscription && plan && (
         <form className="stack gap-16" onSubmit={submit} noValidate>
           <p className="muted" style={{ marginTop: -8 }}>
-            {customer?.name} · {plan.name} plan · {subscription.renewsOn > dayKey(new Date()) ? `current month ends ${fmtDate(parseLocal(subscription.renewsOn))}` : "lapsed, the new month starts today"}
+            {customer?.name} · {plan.name} plan · new month from {fmtDate(parseLocal(renewedPeriod(subscription, new Date()).periodStart))}
           </p>
           <div className="kv">
             <span className="muted">One month</span>

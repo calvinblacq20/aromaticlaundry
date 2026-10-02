@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { localIso } from "../lib/format";
+import { addDays, dayKey, localIso, startOfDay } from "../lib/format";
 import { balanceDue } from "../lib/orders";
 import { turnaroundHours } from "../lib/pricing";
 import { readyTime } from "../lib/schedule";
@@ -10,6 +10,12 @@ import { actions, getAppData, shop, type WalkInOrder } from "./store";
 import type { Order, OrderStatus } from "./types";
 
 const now = new Date(2026, 8, 15, 11, 0);
+/** Local "YYYY-MM-DDTHH:mm" a few days from the real now, for actions that check the clock. */
+const ahead = (days: number, hour: number) => {
+  const d = addDays(startOfDay(new Date()), days);
+  d.setHours(hour);
+  return localIso(d);
+};
 const fresh = (id: string) => getAppData().orders.find((o) => o.id === id)!;
 const find = (test: (o: Order) => boolean, what: string) => {
   const order = getAppData().orders.find(test);
@@ -87,6 +93,26 @@ describe("the counter", () => {
     if (booked.pickupId) expect(getAppData().appointments.find((a) => a.id === booked.pickupId)?.status).toBe("done");
   });
 
+  it("rejects a blank total instead of washing it for free", () => {
+    const booked = find((o) => o.status === "booked", "booked order");
+    expect(shop.checkIn(booked.id, { count: 8, total: Number.NaN }, now)).toEqual({ error: "Enter a total between GH₵ 0 and GH₵ 100,000." });
+  });
+
+  it("hands a delivery window back to the owner when a late check-in makes it too early", () => {
+    ok(actions.placeOrder({
+      items: [{ serviceId: "big-basket", qty: 1, unitPrice: 120 }], speed: "express", care: DEFAULT_CARE, intake: "pickup", handback: "delivery", zoneId: "z-weija",
+      inAt: ahead(2, 9), readyAt: ahead(2, 12), deliveryStart: ahead(2, 13), saveCare: false, remember: false, payChoice: "later", total: 200, riderFee: 30, expressFee: 50, planCover: 0, discount: 0,
+      contact: { name: "Esi Mensah", phone: "020 765 0001", email: "esi@gmail.com", town: "Weija", address: "Weija junction", digitalAddress: "" },
+    }));
+    const order = getAppData().orders[0]!;
+    const late = addDays(startOfDay(new Date()), 2);
+    late.setHours(11, 0);
+    const { deliveryTooEarly } = ok(shop.checkIn(order.id, { count: 20 }, late));
+    expect(deliveryTooEarly).toBe(true);
+    expect(fresh(order.id).readyAt).toBe(ahead(2, 14));
+    expect(getAppData().appointments.find((a) => a.id === order.deliveryId)?.status).toBe("requested");
+  });
+
   it("won't drop the total below what's already been paid", () => {
     const paid = find((o) => o.status === "booked" && o.payments.length > 0 && o.total > 0, "paid booking");
     const already = paid.total - balanceDue(paid);
@@ -123,6 +149,15 @@ describe("the counter", () => {
     ok(shop.cancel(active.id, now));
     expect(shop.recordPayment(active.id, { amount: 10, method: "momo" }, now)).toEqual({ error: "This order is cancelled, so it can't take payments." });
     expect(shop.cancel(active.id, now)).toEqual({ error: "This order is already closed." });
+  });
+
+  it("releases a rider window that's already under way when the order is cancelled", () => {
+    const order = find((o) => o.status === "booked" && Boolean(o.pickupId), "booked pickup");
+    const pickup = getAppData().appointments.find((a) => a.id === order.pickupId)!;
+    // Cancelled after the window opened: the rider is on the way, and the run still has to come off the list.
+    const during = new Date(new Date(pickup.start).getTime() + 30 * 60_000);
+    ok(shop.cancel(order.id, during));
+    expect(getAppData().appointments.find((a) => a.id === pickup.id)?.status).toBe("cancelled");
   });
 
   it("releases upcoming rider windows when an order is cancelled", () => {
@@ -196,9 +231,10 @@ describe("counter drop-offs", () => {
 
   it("books the delivery window and takes plan baskets off the client's plan", () => {
     const sub = getAppData().subscriptions.find((s) => s.customerId === "c-demo")!;
-    const { order } = ok(shop.createOrder(walkIn({ customerId: "c-demo", newClient: undefined, usePlan: true, planCover: 160, total: 50, handback: "delivery", zoneId: "z-weija", deliveryStart: "2026-09-15T17:00", payment: undefined }), new Date()));
+    const { order } = ok(shop.createOrder(walkIn({ customerId: "c-demo", newClient: undefined, usePlan: true, planCover: 160, total: 50, handback: "delivery", zoneId: "z-weija", deliveryStart: ahead(2, 17), payment: undefined }), new Date()));
     expect(order).toMatchObject({ subscriptionId: sub.id, payChoice: "plan", planCover: 160, zoneId: "z-weija" });
-    expect(getAppData().appointments.find((a) => a.id === order.deliveryId)).toMatchObject({ purpose: "delivery", start: "2026-09-15T17:00", status: "confirmed" });
+    expect(getAppData().appointments.find((a) => a.id === order.deliveryId)).toMatchObject({ purpose: "delivery", start: ahead(2, 17), status: "confirmed" });
+    expect(shop.createOrder(walkIn({ handback: "delivery", zoneId: "z-weija", deliveryStart: ahead(-1, 9), payment: undefined }), new Date())).toEqual({ error: "That delivery window is before it's ready. Pick a later one." });
     expect(shop.createOrder(walkIn({ usePlan: true }), new Date())).toEqual({ error: "This client isn't on an active plan." });
   });
 });
@@ -211,7 +247,8 @@ describe("plans, prices and settings", () => {
     expect(shop.recordPlanPayment(sub.id, { amount: 400, method: "cash" })).toEqual({ error: "A month of Family is GH₵ 750." });
     const { payment } = ok(shop.recordPlanPayment(sub.id, { amount: 750, method: "momo", reference: "MTN 12345678" }));
     expect(payment).toMatchObject({ reference: "MTN 12345678", receivedBy: "Aromatic Laundry" });
-    expect(getAppData().subscriptions.find((s) => s.id === sub.id)?.periodStart).toBe(sub.renewsOn);
+    // Paid before the month ran out, so a fresh month starts today.
+    expect(getAppData().subscriptions.find((s) => s.id === sub.id)?.periodStart).toBe(dayKey(new Date()));
     shop.setSubscriptionStatus(sub.id, "cancelled");
     expect(shop.recordPlanPayment(sub.id, { amount: 750, method: "cash" })).toEqual({ error: "This plan was cancelled. Join again from Plans." });
   });

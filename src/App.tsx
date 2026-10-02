@@ -3,13 +3,14 @@ import { lazy, Suspense, useEffect } from "react";
 import { HashRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { Skeleton } from "./components/Bits";
 import { DesktopFooter, DesktopNav, TabBar } from "./components/Chrome";
-import { NotifyProvider } from "./components/Notify";
+import { NotifyProvider, useNotify } from "./components/Notify";
 import { Splash } from "./components/Overlays";
 import { SmoothScroll, useScrollTo } from "./components/Scroll";
 import { Explore } from "./client/Explore";
 import { Home } from "./client/Home";
 import { Orders } from "./client/Orders";
 import { Profile } from "./client/Profile";
+import { onSaveFailed } from "./data/store";
 import { motionMode } from "./motion";
 
 // Deeper screens load on demand to keep the first download small on mobile data.
@@ -126,6 +127,13 @@ function ClientApp() {
   );
 }
 
+/** Says so when a change couldn't be stored on this phone, instead of losing it quietly on the next reload. */
+function SaveFailedNotice() {
+  const notify = useNotify();
+  useEffect(() => onSaveFailed(() => notify("Not saved on this phone", "The browser's storage is full, so this change is lost when the page reloads. Reset the demo data in Settings to make room.")), [notify]);
+  return null;
+}
+
 export function App() {
   // Motion follows the mode index.html resolved (data-motion), not the media query, so JS and CSS
   // agree and ?motion= overrides reach the animations too. Calm drops slides, zooms and parallax
@@ -136,6 +144,7 @@ export function App() {
       <HashRouter>
         <NotifyProvider>
           <Splash />
+          <SaveFailedNotice />
           <Routes>
             <Route
               path="admin/*"

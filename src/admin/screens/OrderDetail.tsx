@@ -13,7 +13,7 @@ import type { Order } from "../../data/types";
 import { telLink, formatGhPhone, whatsappLink } from "../../lib/contact";
 import { fmtDate, fmtDay, fmtDayShort, fmtTime, money, parseLocal, plural, relativeDay } from "../../lib/format";
 import { itemSummary } from "../../lib/items";
-import { balanceDue, isActive, paidTotal, stageIndex, stageLabel, stagesFor } from "../../lib/orders";
+import { adjustmentLabel, balanceDue, counterAdjustment, isActive, paidTotal, stageIndex, stageLabel, stagesFor } from "../../lib/orders";
 import { windowLabel } from "../../lib/schedule";
 import { METHOD_LABEL, OWNER_STAGE_LABEL, SOURCE_LABEL, orderTitle, ownerBadge, ownerDateLine, ownerNextStep } from "../../lib/shop";
 import { enter } from "../../motion";
@@ -84,6 +84,7 @@ function OrderView({ order }: { order: Order }) {
   const pickup = visits.find((a) => a.purpose === "pickup" && a.status !== "cancelled");
   const delivery = visits.find((a) => a.purpose === "delivery" && a.status !== "cancelled");
   const zone = zoneById(order.zoneId);
+  const adjustment = counterAdjustment(order);
   const history = [...order.history].reverse();
   const inAt = parseLocal(order.inAt);
   const readyAt = parseLocal(order.readyAt);
@@ -272,6 +273,7 @@ function OrderView({ order }: { order: Order }) {
                 { label: `Rider${zone ? ` · ${zone.name}` : ""}`, amount: order.riderFee },
                 { label: "Covered by plan", amount: -order.planCover },
                 { label: "Loyalty points", amount: -order.discount },
+                { label: adjustmentLabel(adjustment), amount: adjustment },
               ]
                 .filter((row) => row.amount !== 0)
                 .map((row) => (

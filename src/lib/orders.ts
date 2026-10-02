@@ -36,6 +36,18 @@ export function balanceDue(order: Pick<Order, "payments" | "total">): number {
   return Math.max(0, order.total - paidTotal(order));
 }
 
+/**
+ * What the counter changed at check-in (a bigger basket than booked, a gown priced): the total
+ * less everything already listed. 0 when nothing changed.
+ */
+export function counterAdjustment(order: Pick<Order, "items" | "total" | "expressFee" | "riderFee" | "planCover" | "discount">): number {
+  const listed = order.items.reduce((sum, i) => sum + i.unitPrice * i.qty, 0) + order.expressFee + order.riderFee - order.planCover - order.discount;
+  const change = Math.round((order.total - listed) * 100) / 100;
+  return Math.abs(change) < 0.01 ? 0 : change;
+}
+
+export const adjustmentLabel = (amount: number) => (amount > 0 ? "Adjusted at the counter" : "Counter discount");
+
 export function isActive(order: Pick<Order, "status">): boolean {
   return order.status !== "done" && order.status !== "cancelled";
 }

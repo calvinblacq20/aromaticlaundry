@@ -5,6 +5,7 @@ import type { Customer, Order, Payment, PaymentMethod, Subscription } from "../d
 import { formatGhPhone } from "../lib/contact";
 import { fmtDate, fmtTime, money } from "../lib/format";
 import { itemSummary } from "../lib/items";
+import { adjustmentLabel, counterAdjustment } from "../lib/orders";
 import { amountInWords, verifyCode } from "../lib/receipts";
 import { enter } from "../motion";
 import { AppIcon, LogoMark } from "./Brand";
@@ -31,9 +32,8 @@ export function orderSubject(order: Order): ReceiptSubject {
   if (order.riderFee) rows.push({ label: "Rider pickup and delivery", amount: order.riderFee });
   if (order.planCover) rows.push({ label: "Covered by monthly plan", amount: -order.planCover });
   if (order.discount) rows.push({ label: "Loyalty points", amount: -order.discount });
-  // Anything the counter changed at check-in (a bigger basket, a gown priced) shows as its own line.
-  const listed = rows.reduce((sum, r) => sum + r.amount, 0);
-  if (Math.abs(order.total - listed) > 0.005) rows.push({ label: order.total > listed ? "Adjusted at the counter" : "Counter discount", amount: order.total - listed });
+  const adjustment = counterAdjustment(order);
+  if (adjustment) rows.push({ label: adjustmentLabel(adjustment), amount: adjustment });
   return { ref: order.number, refLabel: "Order no.", total: order.total, payments: order.payments, rows };
 }
 

@@ -4,7 +4,7 @@ import type { Order, Service, Subscription } from "../data/types";
 import { formatGhPhone, googleCalendarLink, icsFile, normalizeGhPhone, whatsappLink } from "./contact";
 import { dayKey, fmtDay, money, parseLocal, relativeDay } from "./format";
 import { basketCount, itemSummary, orderTitle, serviceLine, servicePrice, unitCount } from "./items";
-import { badgeFor, balanceDue, canCancel, isLate, nextAction, stagesFor, titleFor, validatePayment } from "./orders";
+import { badgeFor, balanceDue, canCancel, counterAdjustment, isLate, nextAction, stagesFor, titleFor, validatePayment } from "./orders";
 import { addMonth, basketsUsed, planStatus, renewalDue, renewedPeriod } from "./plans";
 import { canExpress, defaultQty, estimate, riderTrips, turnaroundHours, unitPrice } from "./pricing";
 import { amountInWords, numberToWords, orderNumber, receiptNumber, verifyCode } from "./receipts";
@@ -190,6 +190,13 @@ describe("orders", () => {
     expect(validatePayment(base, 160)).toBeNull();
   });
 
+  it("shows what the counter changed at check-in as its own amount", () => {
+    expect(counterAdjustment(base)).toBe(0);
+    expect(counterAdjustment({ ...base, total: 180 })).toBe(20);
+    expect(counterAdjustment({ ...base, total: 150 })).toBe(-10);
+    expect(counterAdjustment({ ...base, riderFee: 30, expressFee: 50, planCover: 80, discount: 5, total: 155 })).toBe(0);
+  });
+
   it("lets clients cancel only before the laundry reaches the counter", () => {
     expect(canCancel({ status: "booked" })).toBe(true);
     expect(canCancel({ status: "received" })).toBe(false);
@@ -219,9 +226,12 @@ describe("plans", () => {
     expect(planStatus(sub, [], parseLocal("2026-10-02T10:00"))).toMatchObject({ left: 0, lapsed: true });
   });
 
-  it("renews from where the month ended, or from today after a long gap", () => {
+  it("renews from where the month ended, or from today when early or long lapsed", () => {
+    expect(renewedPeriod(sub, parseLocal("2026-10-01T10:00"))).toEqual({ periodStart: "2026-10-01", renewsOn: "2026-11-01" });
     expect(renewedPeriod(sub, parseLocal("2026-10-03T10:00"))).toEqual({ periodStart: "2026-10-01", renewsOn: "2026-11-01" });
     expect(renewedPeriod(sub, parseLocal("2026-11-20T10:00"))).toEqual({ periodStart: "2026-11-20", renewsOn: "2026-12-20" });
+    // Early: the new month starts today, so nothing booked from now on falls between two months.
+    expect(renewedPeriod(sub, parseLocal("2026-09-20T10:00"))).toEqual({ periodStart: "2026-09-20", renewsOn: "2026-10-20" });
   });
 
   it("reminds about renewals three days out, but not for plans already cancelled", () => {

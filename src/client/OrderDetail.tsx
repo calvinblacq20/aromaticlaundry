@@ -22,7 +22,7 @@ import { amountDue, canViewOrder } from "../lib/checkout";
 import { formatGhPhone, mapsLinks, telLink, whatsappLink } from "../lib/contact";
 import { fmtDate, fmtDay, fmtDayShort, fmtTime, money, parseLocal, plural } from "../lib/format";
 import { itemSummary } from "../lib/items";
-import { badgeFor, balanceDue, canCancel, isActive, nextAction, paidTotal, stageIndex, stageLabel, stagesFor, titleFor } from "../lib/orders";
+import { adjustmentLabel, badgeFor, balanceDue, canCancel, counterAdjustment, isActive, nextAction, paidTotal, stageIndex, stageLabel, stagesFor, titleFor } from "../lib/orders";
 import { windowLabel } from "../lib/schedule";
 import { enter, spring } from "../motion";
 
@@ -129,6 +129,7 @@ function OrderView({ order }: { order: Order }) {
   const action = nextAction(order, now, delivery?.start);
   const badge = badgeFor(order, now);
   const zone = zoneById(order.zoneId);
+  const adjustment = counterAdjustment(order);
   const hasQuoted = order.items.some((i) => serviceById(i.serviceId)?.kind === "quote" && i.unitPrice === 0);
   const balance = balanceDue(order);
   const paid = paidTotal(order);
@@ -373,6 +374,12 @@ function OrderView({ order }: { order: Order }) {
               <div className="kv muted">
                 <span>Loyalty points</span>
                 <span>-{money(order.discount)}</span>
+              </div>
+            )}
+            {adjustment !== 0 && (
+              <div className="kv muted">
+                <span>{adjustmentLabel(adjustment)}</span>
+                <span>{money(adjustment)}</span>
               </div>
             )}
             <div className="divider" style={{ margin: 0 }} />

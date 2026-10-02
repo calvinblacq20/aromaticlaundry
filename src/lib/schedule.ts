@@ -112,6 +112,10 @@ export function slotsFor(day: Date, hours: Hours, taken: string[], now: Date, st
   return slots;
 }
 
+/** Runs the rider can take in one window, and how much notice a window needs. */
+export const RIDER_CAPACITY = 3;
+export const RIDER_NOTICE_MS = 2 * 3_600_000;
+
 export interface RiderWindow {
   /** "09:00 – 11:00" */
   label: string;
@@ -131,10 +135,10 @@ export function riderWindows(day: Date, hours: Hours, booked: string[], now: Dat
   const span = hours[day.getDay()];
   if (!span) return [];
   const minutes = opts.minutes ?? 120;
-  const capacity = opts.capacity ?? 3;
+  const capacity = opts.capacity ?? RIDER_CAPACITY;
   const open = at(day, span[0]);
   const close = at(day, span[1]);
-  const cutoff = new Date(now.getTime() + 2 * 3_600_000);
+  const cutoff = new Date(now.getTime() + RIDER_NOTICE_MS);
   const counts = new Map<string, number>();
   for (const start of booked) counts.set(start, (counts.get(start) ?? 0) + 1);
   const windows: RiderWindow[] = [];

@@ -73,7 +73,12 @@ export function upsertCustomer(
     digitalAddress: contact.digitalAddress || existing?.digitalAddress,
   };
   if (existing) {
-    const customer = { ...existing, ...details };
+    // Typing an account's number while signed out proves nothing, so a guest checkout only fills
+    // what the account is missing. The account holder changes their own details after logging in.
+    const guestOnAccount = existing.hasAccount && !opts.customerId;
+    const customer = guestOnAccount
+      ? { ...existing, email: existing.email || details.email, town: existing.town || details.town, address: existing.address || details.address, digitalAddress: existing.digitalAddress || details.digitalAddress }
+      : { ...existing, ...details };
     return { customers: customers.map((c) => (c.id === existing.id ? customer : c)), customer };
   }
   const customer: Customer = { id: opts.newId(), ...details, memberSince: opts.now.toISOString(), hasAccount: false, points: 0, source: "app" };

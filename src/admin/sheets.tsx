@@ -191,13 +191,19 @@ export function CheckInSheet({ order, customer, open, onClose, onDone }: { order
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const result = shop.checkIn(order.id, { count: Math.floor(Number(count)), notes, photos, total: parseAmount(total) });
+    // An empty box is a mistake, not a free wash: NaN fails the store's total check.
+    const result = shop.checkIn(order.id, { count: Math.floor(Number(count)), notes, photos, total: total.trim() ? parseAmount(total) : Number.NaN });
     if ("error" in result) {
       setError(result.error);
       return;
     }
     onClose();
-    notify("Checked in", `${order.number}: ${result.order.checkIn?.count} pieces counted. The ready time starts now.`);
+    notify(
+      "Checked in",
+      result.deliveryTooEarly
+        ? `${order.number}: ${result.order.checkIn?.count} pieces counted. It's now ready after the delivery window the client chose, so offer a later one in Rider runs.`
+        : `${order.number}: ${result.order.checkIn?.count} pieces counted. The ready time starts now.`,
+    );
     onDone();
   };
 

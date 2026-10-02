@@ -62,10 +62,18 @@ describe("checkout details", () => {
 describe("customer records", () => {
   const opts = { now: new Date("2026-09-15T10:00:00Z"), newId: () => "c-new" };
 
-  it("matches a returning guest by WhatsApp number in any format and keeps account, points and address", () => {
-    const { customers, customer: updated } = upsertCustomer([customer], { ...contact, phone: "+233 24 851 5773" }, opts);
+  it("matches a returning guest by WhatsApp number in any format, updates their details and keeps the rider's address", () => {
+    const guest = { ...customer, hasAccount: false };
+    const { customers, customer: updated } = upsertCustomer([guest], { ...contact, phone: "+233 24 851 5773" }, opts);
     expect(customers).toHaveLength(1);
-    expect(updated).toMatchObject({ id: "c1", name: "Ama Mensah", email: "ama@gmail.com", town: "Gbawe", hasAccount: true, points: 120, address: "Near the Total station" });
+    expect(updated).toMatchObject({ id: "c1", name: "Ama Mensah", email: "ama@gmail.com", town: "Gbawe", points: 120, address: "Near the Total station" });
+  });
+
+  it("won't let a signed-out checkout rewrite an account's details, only fill gaps", () => {
+    const { customer: kept } = upsertCustomer([{ ...customer, digitalAddress: undefined }], { ...contact, name: "Someone Else", email: "else@gmail.com", digitalAddress: "GS-0001-0002" }, opts);
+    expect(kept).toMatchObject({ id: "c1", name: "Ama M.", email: "old@gmail.com", town: "Weija", hasAccount: true, digitalAddress: "GS-0001-0002" });
+    const { customer: signedIn } = upsertCustomer([customer], { ...contact, name: "Ama Mensah" }, { ...opts, customerId: "c1" });
+    expect(signedIn.name).toBe("Ama Mensah");
   });
 
   it("creates a guest record for a new number", () => {

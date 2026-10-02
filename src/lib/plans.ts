@@ -45,10 +45,15 @@ export function activeSubscription(subscriptions: Subscription[], customerId: st
   return subscriptions.find((s) => s.customerId === customerId && s.status === "active" && s.renewsOn > today);
 }
 
-/** A renewal paid moves the month on from wherever it ended (or from today, when it lapsed long ago). */
+/**
+ * The month a renewal pays for. Renewing on or up to a week after the renewal day carries on from
+ * where the month ended. Renewing early (or long after it lapsed) starts a fresh month today, so the
+ * period always covers today and every plan order counts against it.
+ */
 export function renewedPeriod(subscription: Pick<Subscription, "renewsOn">, now: Date): { periodStart: string; renewsOn: string } {
+  const today = startOfDay(now);
   const end = parseLocal(subscription.renewsOn);
-  const from = end < addDays(startOfDay(now), -7) ? startOfDay(now) : end;
+  const from = end <= today && end >= addDays(today, -7) ? end : today;
   return { periodStart: dayKey(from), renewsOn: dayKey(addMonth(from)) };
 }
 
