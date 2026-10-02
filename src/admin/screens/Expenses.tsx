@@ -47,7 +47,7 @@ export function Expenses() {
         <section className="adm-card" aria-labelledby="spent">
           <CardHead id="spent" title="Spent" action={<DeltaPill delta={delta(spent, spentBefore, "down")} />} />
           <div className="adm-card-body">
-            <p className="adm-big" style={{ color: "var(--ink)" }}>
+            <p className="adm-big adm-big-fit" style={{ color: "var(--ink)" }}>
               {money(spent)}
             </p>
             <p className="muted">
@@ -58,7 +58,7 @@ export function Expenses() {
         <section className="adm-card" aria-labelledby="received">
           <CardHead id="received" title="Received" action={<Link className="adm-link" to="/admin/payments">Payments</Link>} />
           <div className="adm-card-body">
-            <p className="adm-big" style={{ color: "var(--ink)" }}>
+            <p className="adm-big adm-big-fit" style={{ color: "var(--ink)" }}>
               {money(profit.received)}
             </p>
             <p className="muted">Order payments and plan renewals.</p>
@@ -67,7 +67,7 @@ export function Expenses() {
         <section className="adm-card" aria-labelledby="left">
           <CardHead id="left" title="Left over" />
           <div className="adm-card-body">
-            <p className="adm-big" style={{ color: profit.profit < 0 ? "var(--danger)" : "var(--ink)" }}>
+            <p className="adm-big adm-big-fit" style={{ color: profit.profit < 0 ? "var(--danger)" : "var(--ink)" }}>
               {money(profit.profit)}
             </p>
             <p className="muted">{profit.margin === null ? "Nothing came in this period." : `${Math.round(profit.margin * 100)}% of what came in.`}</p>

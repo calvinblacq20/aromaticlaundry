@@ -89,7 +89,7 @@ export function Orders() {
                   <Smartphone size={16} />
                   {orders.length ? "Showing orders on this phone." : "Orders you place on this phone show here."}
                 </span>
-                <span className="inline t-cap" style={{ gap: 12 }}>
+                <span className="inline t-cap" style={{ gap: 12, flexShrink: 0, whiteSpace: "nowrap" }}>
                   <button className="link" onClick={() => setSheet("find")}>
                     Find an order
                   </button>

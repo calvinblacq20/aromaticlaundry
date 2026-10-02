@@ -52,7 +52,7 @@ function AuthShell({ variant, title, photo, children }: { variant: "brand" | "ba
           {/* On phones the brand shows on the log in page only; on wide screens it fills the photo side of every page. */}
           <div className="auth-identity">
             <span className="auth-brand" aria-hidden="true">
-              <LogoMark size={40} />
+              <LogoMark size={58} />
             </span>
             <p className="auth-name">{SHOP.name}</p>
             <p className="auth-tagline">{SHOP.tagline}</p>

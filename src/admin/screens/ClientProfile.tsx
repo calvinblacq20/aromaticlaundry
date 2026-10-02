@@ -23,7 +23,7 @@ import { AdminPage, EmptyState } from "../Shell";
 type Tab = "orders" | "care" | "notebook" | "payments";
 const TABS: { id: Tab; label: string }[] = [
   { id: "orders", label: "Orders" },
-  { id: "care", label: "Care & plan" },
+  { id: "care", label: "Care" },
   { id: "notebook", label: "Notebook" },
   { id: "payments", label: "Payments" },
 ];

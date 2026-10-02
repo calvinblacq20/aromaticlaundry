@@ -22,12 +22,20 @@
           mode = "full";
         }
         document.documentElement.setAttribute("data-motion", mode);
+        // The launch screen shows once per browser session; Splash in src/components/Overlays.tsx
+        // records that it has been seen.
+        try {
+          if (sessionStorage.getItem("al-splash-seen") === "1") document.documentElement.setAttribute("data-splash", "off");
+        } catch (error) {
+          /* storage blocked: show it */
+        }
       })();
     </script>
     <meta name="theme-color" content="#ebeff5" />
     <meta name="description" content="Aromatic Laundry inside West Hills Mall, Weija: wash, dry, fold and iron from GH₵ 50 a basket, suits and kente, stain rescue, and rider pickup and delivery across Weija, Kasoa and Accra. Book, track and pay on your phone." />
     <title>Aromatic Laundry: Laundry &amp; Dry Cleaning at West Hills Mall</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/brand/al-app-icon-180.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,9 +43,78 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap"
     />
+    <style>
+      /* Launch screen (#splash). Inline so it paints before the app's styles and script arrive.
+         Once its images are in (.is-ready) the logo builds itself: the shirt swings onto its
+         hanger, the folded stack slides in, the name wipes on, then the tagline and the scent rise.
+         Splash in src/components/Overlays.tsx takes it down; keep SPLASH_MS there in step. */
+      #splash { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #fff; transition: opacity 0.45s cubic-bezier(0.44, 0, 0.56, 1), transform 0.45s cubic-bezier(0.44, 0, 0.56, 1); }
+      #splash.is-leaving { opacity: 0; transform: scale(1.04); pointer-events: none; }
+      [data-splash="off"] #splash { display: none; }
+      .splash-logo { position: relative; width: min(72vw, 340px); aspect-ratio: 720 / 475; }
+      .splash-logo img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+      #splash.is-ready .splash-logo img { opacity: 1; }
+      .splash-bar { position: absolute; left: 50%; bottom: calc(56px + env(safe-area-inset-bottom, 0px)); width: 120px; height: 3px; margin-left: -60px; border-radius: 3px; background: #e7ebf3; overflow: hidden; }
+      .splash-bar i { display: block; height: 100%; background: #0b2366; transform: scaleX(0); transform-origin: left; }
+      #splash.is-ready .splash-bar i { animation: splash-fill 3s cubic-bezier(0.44, 0, 0.56, 1) forwards; }
+      [data-motion="full"] #splash.is-ready .splash-shirt { transform-origin: 48.7% 6%; animation: splash-hang 1s 0.1s ease-in-out both; }
+      [data-motion="full"] #splash.is-ready .splash-stack { animation: splash-slide 0.6s 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      [data-motion="full"] #splash.is-ready .splash-aromatic { animation: splash-wipe 0.7s 0.9s cubic-bezier(0.65, 0, 0.35, 1) both; }
+      [data-motion="full"] #splash.is-ready .splash-laundry { animation: splash-wipe 0.7s 1.1s cubic-bezier(0.65, 0, 0.35, 1) both; }
+      [data-motion="full"] #splash.is-ready .splash-tagline { animation: splash-rise 0.5s 1.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+      [data-motion="full"] #splash.is-ready .splash-scent { animation: splash-rise 0.9s 1.3s cubic-bezier(0.22, 1, 0.36, 1) both, splash-drift 1.6s 2.2s ease-in-out infinite alternate; }
+      [data-motion="calm"] #splash.is-ready .splash-logo { animation: splash-fade 0.5s ease both; }
+      [data-motion="calm"] #splash.is-ready .splash-bar i { animation-duration: 1s; }
+      [data-motion="calm"] #splash.is-leaving { transform: none; }
+      [data-motion="off"] .splash-bar { display: none; }
+      @keyframes splash-hang { 0% { opacity: 0; transform: translateY(-8%) rotate(-12deg); } 35% { opacity: 1; transform: rotate(7deg); } 60% { transform: rotate(-3deg); } 80% { transform: rotate(1deg); } 100% { opacity: 1; transform: none; } }
+      @keyframes splash-slide { from { opacity: 0; transform: translateX(-10%); } to { opacity: 1; transform: none; } }
+      @keyframes splash-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+      @keyframes splash-rise { from { opacity: 0; transform: translateY(3%); } to { opacity: 1; transform: none; } }
+      @keyframes splash-drift { to { opacity: 0.7; transform: translateY(-1.5%); } }
+      @keyframes splash-fade { from { opacity: 0; } }
+      @keyframes splash-fill { to { transform: scaleX(1); } }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="splash" role="status" aria-label="Loading Aromatic Laundry">
+      <div class="splash-logo">
+        <img class="splash-scent" src="/brand/splash-scent.webp" alt="" width="720" height="475" fetchpriority="high" />
+        <img class="splash-shirt" src="/brand/splash-shirt.webp" alt="" width="720" height="475" fetchpriority="high" />
+        <img class="splash-stack" src="/brand/splash-stack.webp" alt="" width="720" height="475" fetchpriority="high" />
+        <img class="splash-aromatic" src="/brand/splash-aromatic.webp" alt="" width="720" height="475" fetchpriority="high" />
+        <img class="splash-laundry" src="/brand/splash-laundry.webp" alt="" width="720" height="475" fetchpriority="high" />
+        <img class="splash-tagline" src="/brand/splash-tagline.webp" alt="" width="720" height="475" fetchpriority="high" />
+      </div>
+      <div class="splash-bar" aria-hidden="true"><i></i></div>
+    </div>
+    <script>
+      // Start the entrance once the logo's images are in, so a slow connection doesn't play it to an
+      // empty screen. After two seconds it starts regardless.
+      (function () {
+        var splash = document.getElementById("splash");
+        if (document.documentElement.getAttribute("data-splash") === "off") return;
+        var images = splash.getElementsByTagName("img");
+        var waiting = images.length;
+        var started = false;
+        function start() {
+          if (started) return;
+          started = true;
+          splash.setAttribute("data-ready-at", String(performance.now()));
+          splash.classList.add("is-ready");
+          splash.dispatchEvent(new Event("splashready"));
+        }
+        function loaded() {
+          if (--waiting === 0) start();
+        }
+        for (var i = 0; i < images.length; i++) {
+          if (images[i].complete) loaded();
+          else images[i].onload = images[i].onerror = loaded;
+        }
+        setTimeout(start, 2000);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

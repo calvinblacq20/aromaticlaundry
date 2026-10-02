@@ -81,7 +81,7 @@ export function Plans() {
         <section className="adm-card">
           <div className="adm-card-body" style={{ paddingTop: 18 }}>
             <p className="adm-meta">Renewals a month</p>
-            <p className="adm-big" style={{ marginTop: 6, color: "var(--ink)" }}>
+            <p className="adm-big adm-big-fit" style={{ marginTop: 6, color: "var(--ink)" }}>
               {money(monthly)}
             </p>
             <p className="muted">Paid up front, before a single basket is washed.</p>

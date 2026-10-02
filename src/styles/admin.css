@@ -385,6 +385,9 @@ body:has(.adm) { background: var(--ground); }
 .adm-dark .divider { background: rgba(255, 255, 255, 0.12); }
 .adm-big { font-size: 64px; line-height: 1.05; letter-spacing: -0.04em; font-weight: 400; font-variant-numeric: tabular-nums; }
 .adm-dark .adm-big { color: var(--aqua); }
+/* Money figures size to their card, so "GH₵ 18,870" stays on one line in a narrow column or on a phone. */
+.adm-card-body:has(> .adm-big-fit) { container-type: inline-size; }
+.adm-big-fit { font-size: clamp(32px, 16cqi, 64px); white-space: nowrap; }
 
 /* ---------- Ranked lists and tables ---------- */
 .rank { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }

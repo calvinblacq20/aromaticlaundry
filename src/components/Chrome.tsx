@@ -182,7 +182,7 @@ export function DesktopFooter() {
     <footer ref={ref} className="desk-footer desktop-only">
       <motion.div className="desk-footer-inner" style={calm ? undefined : { y: innerY }}>
         <div className="stack gap-12" style={{ maxWidth: 260 }}>
-          <AppIcon size={44} />
+          <img src="/brand/al-logo.webp" width={176} height={116} alt={SHOP.name} loading="lazy" decoding="async" />
           <p className="muted">{SHOP.category} inside West Hills Mall. Drop off at the counter, or our rider collects and delivers across Weija, Kasoa and Accra.</p>
         </div>
         <div className="desk-footer-col">

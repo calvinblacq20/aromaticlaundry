@@ -2,7 +2,7 @@ import { Check, Clock } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogoMark } from "../../components/Brand";
+import { AppIcon } from "../../components/Brand";
 import { Photo } from "../../components/Bits";
 import { Cta } from "../../components/Button";
 import { Reveal } from "../../components/Reveal";
@@ -22,7 +22,7 @@ export function ClosingCta() {
   return (
     <section className="closing" data-nav-theme="dark" aria-labelledby="closing-title">
       <Reveal as="span" look="focus" className="closing-mark">
-        <LogoMark size={44} />
+        <AppIcon size={56} />
       </Reveal>
       <Reveal as="h2" look="focus" delay={0.05} id="closing-title" className="closing-title">
         Ready to hand over the laundry?

@@ -136,7 +136,7 @@ function ShopCard({ details }: { details: ShopDetails }) {
       }}
     >
       {field("name", "Shop name")}
-      {field("tagline", "Tagline", "On the splash screen, receipts and the sign-off of every WhatsApp message.")}
+      {field("tagline", "Tagline", "On the sign-in screen, receipts and the sign-off of every WhatsApp message.")}
       {field("phone", "Phone, WhatsApp and MoMo number", "WhatsApp messages tell clients to send MoMo to this number.")}
       {field("email", "Email", "Leave empty to hide it.")}
       {field("area", "Area shown to clients", "e.g. West Hills Mall, Weija")}

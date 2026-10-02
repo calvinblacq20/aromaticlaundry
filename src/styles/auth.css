@@ -293,7 +293,7 @@
   .auth-top.is-bar .auth-identity { display: flex; }
   .auth-bar-title { display: none; }
   .auth-brand { width: 104px; height: 104px; margin-top: 0; border-radius: 30px; }
-  .auth-brand svg { transform: scale(1.35); }
+  .auth-brand .logo-mark { width: 80px; height: 80px; }
   .auth-name { margin-top: 22px; font-size: 30px; line-height: 1.2; letter-spacing: -0.03em; }
   .auth-tagline { margin-top: 8px; font-size: 15px; }
   .auth-back { top: 24px; left: 24px; }
