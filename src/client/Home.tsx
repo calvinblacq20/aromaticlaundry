@@ -1,7 +1,7 @@
 import { Check, Clock, Droplet, Gift, Heart, MapPin, MessageCircle, Pause, Phone, Play, Share2, Shirt, Sparkles, Truck, Wallet, WashingMachine } from "lucide-react";
 import { TikTokIcon } from "../components/SocialIcons";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppIcon } from "../components/Brand";
 import { Photo, SectionHead, Skeleton, Stars, useSkeleton } from "../components/Bits";
@@ -12,6 +12,7 @@ import { Reveal } from "../components/Reveal";
 import { CountUp, ScrollRevealText, useScrollTo } from "../components/Scroll";
 import { ClosingCta } from "./home/ClosingCta";
 import { EditorialHero } from "./home/EditorialHero";
+import { HeroBar } from "./home/HeroBar";
 import { HowItWorks } from "./home/HowItWorks";
 import { WhyBento } from "./home/WhyBento";
 import { useNotify } from "../components/Notify";
@@ -106,6 +107,18 @@ function ShopPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Tablet and desktop: the hero's own bar is the header at the top, so the floating nav stays tucked
+  // away until the hero scrolls off (styles in hero.css). Set before paint so the nav never flashes.
+  useLayoutEffect(() => {
+    document.documentElement.dataset.heroNav = showHeader ? "shown" : "tucked";
+  }, [showHeader]);
+  useLayoutEffect(
+    () => () => {
+      delete document.documentElement.dataset.heroNav;
+    },
+    [],
+  );
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -135,7 +148,8 @@ function ShopPage() {
   };
 
   const scrollTo = useScrollTo();
-  const goTo = (id: string) => scrollTo(document.getElementById(id), { offset: window.innerWidth >= 810 ? -140 : -112 });
+  // Each section's scroll-margin-top (.anchor) already leaves room for the nav and the section tabs.
+  const goTo = (id: string) => scrollTo(document.getElementById(id));
   // The hero's "See prices" buttons; a stable callback so the hero never re-renders (GSAP owns its markup).
   const goToRef = useRef(goTo);
   goToRef.current = goTo;
@@ -181,10 +195,10 @@ function ShopPage() {
         </AnimatePresence>
       </div>
 
-      {/* Opening slideshow; on phones the share and save buttons sit over it */}
+      {/* Opening slideshow, with the shop's bar (links, WhatsApp, call, share, save) across its top */}
       <div ref={heroRef} className="hero-wrap">
         <EditorialHero onSeePrices={seePrices} />
-        <div className="hero-actions mobile-only">{actionButtons}</div>
+        <HeroBar saved={saved} onSave={() => setSaved(!saved)} onShare={share} onSection={goTo} />
       </div>
 
       {/* Intro sheet */}

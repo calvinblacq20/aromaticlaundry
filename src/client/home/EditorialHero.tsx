@@ -1,7 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { memo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { AppIcon } from "../../components/Brand";
 import { RULES, SHOP } from "../../data/business";
 import { SERVICES } from "../../data/catalog";
 import { money } from "../../lib/format";
@@ -74,7 +73,7 @@ const srcSet = (photo: string, shape: "tall" | "wide", widths: number[]) => widt
 
 /**
  * The home page's opening slideshow, in the editorial style of the Queens Wigs & Bundles build:
- * the shop's name across the top, a photo filling the hero behind a big two-line title, and slides
+ * a photo filling the hero behind a big two-line title, and slides
  * that switch on their own (see ./heroSlideshow.ts). GSAP owns this markup once it mounts, so the
  * component is memoised and takes only a stable callback; it never re-renders.
  */
@@ -84,11 +83,7 @@ export const EditorialHero = memo(function EditorialHero({ onSeePrices }: { onSe
 
   return (
     <section ref={ref} className="hero" aria-roledescription="carousel" aria-label={`${SHOP.name} highlights`}>
-      <div className="hero__brand">
-        <AppIcon size={32} />
-        <span>{SHOP.name}</span>
-      </div>
-
+      {/* The shop's name, links and contact buttons sit over the top in HeroBar (rendered by Home). */}
       {SLIDES.map((slide, i) => (
         <div key={slide.label} className="hero__slide" data-bg={NAVY} data-ink={INK} data-nav-theme="dark" data-label={slide.label}>
           {/* Wide crop on landscape screens, tall crop on portrait ones; both fill the hero. */}
