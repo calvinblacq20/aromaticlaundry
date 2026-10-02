@@ -1,7 +1,7 @@
 import { Check, Clock, Droplet, Gift, Heart, MapPin, MessageCircle, Pause, Phone, Play, Share2, Shirt, Sparkles, Truck, Wallet, WashingMachine } from "lucide-react";
 import { TikTokIcon } from "../components/SocialIcons";
-import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppIcon } from "../components/Brand";
 import { Photo, SectionHead, Skeleton, Stars, useSkeleton } from "../components/Bits";
@@ -11,13 +11,12 @@ import { Marquee } from "../components/Marquee";
 import { Reveal } from "../components/Reveal";
 import { CountUp, ScrollRevealText, useScrollTo } from "../components/Scroll";
 import { ClosingCta } from "./home/ClosingCta";
-import { nextSlide, preloadPhoto, useAutoplay } from "./home/autoplay";
-import { useHeroCurve } from "./home/heroCurve";
+import { EditorialHero } from "./home/EditorialHero";
 import { HowItWorks } from "./home/HowItWorks";
 import { WhyBento } from "./home/WhyBento";
 import { useNotify } from "../components/Notify";
 import { Sheet } from "../components/Sheet";
-import { CATEGORY_PHOTOS, HOURS, SHOP, SHOP_FEATURES, SHOP_PHOTOS } from "../data/business";
+import { CATEGORY_PHOTOS, HOURS, SHOP, SHOP_FEATURES } from "../data/business";
 import { CATEGORIES, PLANS, SERVICES } from "../data/catalog";
 import { accountOf, useAppData } from "../data/store";
 import type { CategoryId } from "../data/types";
@@ -25,7 +24,7 @@ import { telLink, whatsappLink } from "../lib/contact";
 import { fmtDate, money, weekdayLong } from "../lib/format";
 import { serviceLine, servicePrice } from "../lib/items";
 import { openStatus } from "../lib/schedule";
-import { enter, isCalm, motionMode, spring } from "../motion";
+import { enter, spring } from "../motion";
 
 const SECTIONS = [
   { id: "gallery", label: "Gallery" },
@@ -37,11 +36,6 @@ const SECTIONS = [
 ] as const;
 
 const FEATURE_ICONS = { sparkles: Sparkles, clock: Clock, truck: Truck, shirt: Shirt, droplet: Droplet, wallet: Wallet } as const;
-const HERO = SHOP_PHOTOS;
-const heroShot = (n: number) => HERO[n % HERO.length] ?? HERO[0];
-/** Rendered widths of the gallery's big photo and its two side photos. */
-const GALLERY_SIZES = ["(min-width: 1024px) 800px, 66vw", "(min-width: 1024px) 400px, 33vw", "(min-width: 1024px) 400px, 33vw"] as const;
-const GALLERY_FADE_S = 0.9;
 const STATEMENT =
   "Aromatic Laundry is Diane's laundry inside West Hills Mall. Drop a basket at the counter while you shop, or let our rider collect it from your door. We wash, dry, iron and fold, and it comes back smelling the way the name promises.";
 const HIGHLIGHTS = [
@@ -88,7 +82,6 @@ function ShopPage() {
   const notify = useNotify();
   const now = new Date();
   const status = openStatus(now, HOURS);
-  const [slide, setSlide] = useState(0);
   const [saved, setSaved] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [category, setCategory] = useState<CategoryId | "featured">("featured");
@@ -143,32 +136,10 @@ function ShopPage() {
 
   const scrollTo = useScrollTo();
   const goTo = (id: string) => scrollTo(document.getElementById(id), { offset: window.innerWidth >= 810 ? -140 : -112 });
-  // Calm mode (reduced motion, incl. iOS Low Power Mode) leaves out the parallax and zoom below.
-  const calm = isCalm();
-  // Hero photos drift and settle as the page starts to scroll.
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 600], [0, 90]);
-  const heroScale = useTransform(scrollY, [0, 600], [1, 1.08]);
-  // ...and their bottom edge starts as a U that straightens out. The phone intro sheet overlaps the photo by 24px.
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const galleryCurve = useHeroCurve(galleryRef);
-  const heroCurve = useHeroCurve(heroRef, { overlap: 24 });
-  // The photos also move on by themselves: the gallery crossfades to the next set, the phone carousel slides.
-  const trackRef = useRef<HTMLDivElement>(null);
-  // `prev` is the set being covered while the next one fades in over it.
-  const [gallery, setGallery] = useState<{ step: number; prev: number | null }>({ step: 0, prev: null });
-  useAutoplay(galleryRef, async () => {
-    const next = gallery.step + 1;
-    await Promise.all(GALLERY_SIZES.map((sizes, i) => preloadPhoto(heroShot(next + i).src, sizes)));
-    setGallery({ step: next, prev: gallery.step });
-  });
-  useAutoplay(heroRef, async () => {
-    const track = trackRef.current;
-    if (!track) return;
-    const next = nextSlide(track.scrollLeft, track.clientWidth, HERO.length);
-    await preloadPhoto(heroShot(next).src, "100vw");
-    track.scrollTo({ left: next * track.clientWidth, behavior: motionMode() === "full" ? "smooth" : "auto" });
-  });
+  // The hero's "See prices" buttons; a stable callback so the hero never re-renders (GSAP owns its markup).
+  const goToRef = useRef(goTo);
+  goToRef.current = goTo;
+  const seePrices = useCallback(() => goToRef.current("prices"), []);
 
   const actionButtons = (
     <>
@@ -210,57 +181,11 @@ function ShopPage() {
         </AnimatePresence>
       </div>
 
-      {/* Wider screens: photo gallery grid */}
-      <motion.div ref={galleryRef} className="desk-gallery desktop-only" style={{ clipPath: galleryCurve.clipPath, WebkitClipPath: galleryCurve.WebkitClipPath }}>
-        {GALLERY_SIZES.map((sizes, i) => (
-          <div key={i} className="gallery-cell">
-            <motion.div className="gallery-inner" initial={calm ? { opacity: 0 } : { scale: 1.18, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ ...spring.settle, delay: 0.08 * i }} style={calm ? undefined : { y: heroY }}>
-              {/* The incoming photo fades in on top; the old one stays underneath until the last cell has finished. */}
-              {(gallery.prev === null ? [gallery.step] : [gallery.prev, gallery.step]).map((step) => {
-                const shot = heroShot(step + i);
-                const incoming = gallery.prev !== null && step === gallery.step;
-                return (
-                  <motion.div
-                    key={shot.src}
-                    className="gallery-layer"
-                    aria-hidden={step !== gallery.step || undefined}
-                    initial={gallery.prev === null ? false : { opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: GALLERY_FADE_S, delay: 0.12 * i, ease: [0.44, 0, 0.56, 1] }}
-                    onAnimationComplete={incoming && i === GALLERY_SIZES.length - 1 ? () => setGallery((g) => ({ ...g, prev: null })) : undefined}
-                  >
-                    <Photo tone="mist" src={shot.src} alt={shot.alt} position={shot.position} eager={i === 0} sizes={sizes} height="100%" radius={0} markSize={i === 0 ? 150 : 70} />
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
-        ))}
-        <motion.span className="desk-gallery-count" style={{ y: galleryCurve.badgeY }}>
-          {HERO.length} photos
-        </motion.span>
-      </motion.div>
-
-      {/* Phone: hero carousel */}
-      <motion.div ref={heroRef} className="hero mobile-only" style={{ clipPath: heroCurve.clipPath, WebkitClipPath: heroCurve.WebkitClipPath }}>
-        <motion.div
-          ref={trackRef}
-          className="hero-track"
-          style={calm ? undefined : { y: heroY, scale: heroScale }}
-          onScroll={(e) => {
-            const el = e.currentTarget;
-            setSlide(Math.round(el.scrollLeft / el.clientWidth));
-          }}
-        >
-          {HERO.map((shot, i) => (
-            <Photo key={shot.src} tone="mist" src={shot.src} alt={shot.alt} position={shot.position} eager={i === 0} sizes="100vw" height={440} radius={0} markSize={120} className="hero-slide" />
-          ))}
-        </motion.div>
-        <div className="hero-actions">{actionButtons}</div>
-        <motion.span className="hero-count t-cap" style={{ y: heroCurve.badgeY }}>
-          {slide + 1}/{HERO.length}
-        </motion.span>
-      </motion.div>
+      {/* Opening slideshow; on phones the share and save buttons sit over it */}
+      <div ref={heroRef} className="hero-wrap">
+        <EditorialHero onSeePrices={seePrices} />
+        <div className="hero-actions mobile-only">{actionButtons}</div>
+      </div>
 
       {/* Intro sheet */}
       <motion.section className="intro" {...enter(24)}>

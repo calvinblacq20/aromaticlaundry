@@ -130,16 +130,6 @@ export function applySettings(settings: ShopSettings) {
 
 export const zoneById = (id: string | undefined) => (id ? ZONES.find((z) => z.id === id) : undefined);
 
-/** The shop's own photos, from @aromatic.laundry1 on TikTok, for the hero gallery. */
-export const SHOP_PHOTOS = [
-  { src: "/photos/shop-front.webp", alt: "The Aromatic Laundry shopfront inside West Hills Mall, with dry cleaning and ironing on the glass", position: "center 40%" },
-  { src: "/photos/folded-stack.webp", alt: "Freshly washed shirts folded and sealed, ready to go home", position: "center 45%" },
-  { src: "/photos/stain-treatment.webp", alt: "A palm oil stain on a white shirt being treated by hand before the wash", position: "center 55%" },
-  { src: "/photos/shop-counter.webp", alt: "The counter at Aromatic Laundry, where every bag is counted and tagged", position: "center 45%" },
-  { src: "/photos/team.webp", alt: "An Aromatic Laundry attendant in the shop's blue uniform", position: "center 40%" },
-  { src: "/photos/machines.webp", alt: "The washers and dryers at the back of the shop", position: "center 50%" },
-] as const;
-
 export const SHOP_FEATURES = [
   { icon: "sparkles", label: "The Aromatic finish: clothes that smell as clean as they look" },
   { icon: "clock", label: "Ready in 24 hours, or 3 hours with express" },
