@@ -1,7 +1,7 @@
 /* ---------- Editorial hero (home) ----------
  * The Queens Wigs & Bundles hero (src/client/home/heroSlideshow.ts drives it). Title + copy sit in
  * one centred column, so they can never collide. The title is sized by BOTH the hero's width and
- * the screen height, and the portrait frame is centred behind it. --chrome-h is the screen height
+ * the screen height, and each slide's photo fills the hero behind it. --chrome-h is the screen height
  * the hero leaves for everything else: on phones the "Book now" bar and tab bar at the bottom, less
  * the 24px the intro sheet tucks over the hero; on wider screens the floating nav at the top.
  */
@@ -91,16 +91,31 @@
   visibility: visible;
 }
 
-/* Centred with inset + auto margins (GSAP owns `transform` on this element). */
+/* The photo fills the hero edge to edge (GSAP owns `transform` and `clip-path` on this element,
+   so the shade below wipes in and out with it). */
 .hero__frame {
-  --fw: clamp(200px, min(34vw, calc(50 * var(--vh))), 470px);
   position: absolute;
-  inset: 0 0 8% 0;
-  margin: auto;
-  width: var(--fw);
-  height: min(calc(var(--fw) * 1.3667), 80%);
+  inset: 0;
   overflow: hidden;
   z-index: 1;
+}
+
+/* Navy shade so white text reads on the bright photos: deepest behind the name at the top and the
+   buttons and dots at the bottom, lightest around the title. */
+.hero__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% 50%, rgb(11 29 74 / 0.18) 0%, rgb(11 29 74 / 0.42) 100%),
+    linear-gradient(180deg, rgb(11 29 74 / 0.55) 0%, rgb(11 29 74 / 0.22) 26%, rgb(11 29 74 / 0.26) 58%, rgb(11 29 74 / 0.72) 100%);
+  pointer-events: none;
+}
+
+.hero__picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .hero__img {
@@ -268,21 +283,6 @@
   color: #0b1d4a;
 }
 
-/* On light backdrops. */
-.hero-btn--solid {
-  background: #0b1d4a;
-  color: #fff;
-  border-color: #0b1d4a;
-}
-
-.hero-btn--solid::before {
-  background: #fff;
-}
-
-.hero-btn--solid:hover {
-  color: #0b1d4a;
-}
-
 /* ---------- Controls: arrows + progress dots ---------- */
 .hero__controls {
   position: absolute;
@@ -370,11 +370,6 @@
 /* Phones: no header, so the name sits across the top of the hero; the share and save buttons
    sit top right instead of the badge, and swiping changes slides. */
 @media (max-width: 809.98px) {
-  .hero__frame {
-    --fw: min(62vw, calc(44 * var(--vh)));
-    inset: 0 0 14% 0;
-  }
-
   .hero__title {
     font-size: clamp(48px, min(19vw, calc((100 * var(--vh) - var(--chrome-h) - 250px) / 1.75)), 120px);
   }

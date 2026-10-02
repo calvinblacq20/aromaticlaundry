@@ -1,7 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { memo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { photoSrcSet } from "../../components/Bits";
 import { AppIcon } from "../../components/Brand";
 import { RULES, SHOP } from "../../data/business";
 import { SERVICES } from "../../data/catalog";
@@ -9,35 +8,31 @@ import { money } from "../../lib/format";
 import { motionMode } from "../../motion";
 import { initHero } from "./heroSlideshow";
 
-type Look = "light" | "ghost" | "solid";
+type Look = "light" | "ghost";
 type Action = { label: string; look: Look } & ({ to: string } | { prices: true });
 type Slide = {
   label: string;
-  /** Backdrop and text colour the hero blends to; navTheme tells the desktop nav which way to turn. */
-  bg: string;
-  ink: string;
-  navTheme: "dark" | "light";
+  /** Base name of the crops in public/photos/hero (scripts/build_hero_photos.py). */
   photo: string;
   alt: string;
-  position: string;
   kicker: string;
   lines: [string, string];
   copy: string;
   actions: Action[];
 };
 
+/** Behind every slide while the photos change over; the logo's navy, white text on top. */
+const NAVY = "#0b1d4a";
+const INK = "#ffffff";
+
 const basketFrom = Math.min(...SERVICES.filter((s) => s.category === "baskets").map((s) => s.price));
 
-/** Navy and gold from the logo, then the brand blue and aqua (docs: src/styles/tokens.css). */
+/** Professional Unsplash photos, credited in docs/photo-sources.md. */
 const SLIDES: Slide[] = [
   {
     label: "Cleaner clothes",
-    bg: "#0b1d4a",
-    ink: "#f4f7fb",
-    navTheme: "dark",
-    photo: "shop-front",
-    alt: "The Aromatic Laundry shopfront inside West Hills Mall",
-    position: "center 40%",
+    photo: "towels",
+    alt: "Freshly washed white towels, folded and stacked",
     kicker: "West Hills Mall, Weija",
     lines: ["Cleaner", "Clothes"],
     copy: `Wash, dry, iron and fold from ${money(basketFrom)} a basket.`,
@@ -48,12 +43,8 @@ const SLIDES: Slide[] = [
   },
   {
     label: "Stain rescue",
-    bg: "#0a4fb4",
-    ink: "#ffffff",
-    navTheme: "dark",
-    photo: "stain-treatment",
-    alt: "A palm oil stain on a white shirt being treated by hand before the wash",
-    position: "center 55%",
+    photo: "bedding",
+    alt: "Crisp white pillows and bedding in a bright bedroom",
     kicker: "Treated by hand",
     lines: ["Stain", "Rescue"],
     copy: "Palm oil, wine, ink and food, worked out before the wash.",
@@ -61,36 +52,30 @@ const SLIDES: Slide[] = [
   },
   {
     label: "Pickup and delivery",
-    bg: "#f5b301",
-    ink: "#0b1d4a",
-    navTheme: "light",
-    photo: "handover",
-    alt: "A bag of fresh laundry handed back to a client",
-    position: "center 45%",
+    photo: "curtains",
+    alt: "A sunlit room with fresh linen curtains and a side table",
     kicker: "Rider pickup & delivery",
     lines: ["Door", "to Door"],
     copy: "Our rider collects and brings it back across Weija, Kasoa and Accra.",
-    actions: [{ label: "Book a pickup", look: "solid", to: "/order/new" }],
+    actions: [{ label: "Book a pickup", look: "light", to: "/order/new" }],
   },
   {
     label: "Ironing and suits",
-    bg: "#7ad7f0",
-    ink: "#0b1d4a",
-    navTheme: "light",
-    photo: "shirts-pressed",
-    alt: "Freshly pressed shirts on hangers, ready to collect",
-    position: "center 40%",
+    photo: "blazer",
+    alt: "A pressed navy blazer on a hanger",
     kicker: "Ironing, suits & kente",
     lines: ["Sharp", "& Pressed"],
     copy: `Ready in 24 hours, or ${RULES.expressHours} hours with express.`,
-    actions: [{ label: "See prices", look: "solid", prices: true }],
+    actions: [{ label: "See prices", look: "light", prices: true }],
   },
 ];
 
+const srcSet = (photo: string, shape: "tall" | "wide", widths: number[]) => widths.map((w) => `/photos/hero/${photo}-${shape}-${w}.webp ${w}w`).join(", ");
+
 /**
  * The home page's opening slideshow, in the editorial style of the Queens Wigs & Bundles build:
- * the shop's name across the top, a portrait photo behind a big two-line title, and slides that
- * switch on their own (see ./heroSlideshow.ts). GSAP owns this markup once it mounts, so the
+ * the shop's name across the top, a photo filling the hero behind a big two-line title, and slides
+ * that switch on their own (see ./heroSlideshow.ts). GSAP owns this markup once it mounts, so the
  * component is memoised and takes only a stable callback; it never re-renders.
  */
 export const EditorialHero = memo(function EditorialHero({ onSeePrices }: { onSeePrices: () => void }) {
@@ -105,22 +90,25 @@ export const EditorialHero = memo(function EditorialHero({ onSeePrices }: { onSe
       </div>
 
       {SLIDES.map((slide, i) => (
-        <div key={slide.label} className="hero__slide" data-bg={slide.bg} data-ink={slide.ink} data-nav-theme={slide.navTheme} data-label={slide.label}>
+        <div key={slide.label} className="hero__slide" data-bg={NAVY} data-ink={INK} data-nav-theme="dark" data-label={slide.label}>
+          {/* Wide crop on landscape screens, tall crop on portrait ones; both fill the hero. */}
           <div className="hero__frame">
-            <img
-              className="hero__img"
-              src={`/photos/${slide.photo}.webp`}
-              srcSet={photoSrcSet(`/photos/${slide.photo}.webp`)}
-              sizes="(min-width: 810px) 470px, 62vw"
-              width={1080}
-              height={1350}
-              alt={slide.alt}
-              style={{ objectPosition: slide.position }}
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchPriority={i === 0 ? "high" : undefined}
-              decoding="async"
-              draggable={false}
-            />
+            <picture className="hero__picture">
+              <source media="(orientation: landscape)" srcSet={srcSet(slide.photo, "wide", [1280, 1920, 2560])} sizes="(min-width: 1248px) 1200px, 100vw" />
+              <img
+                className="hero__img"
+                src={`/photos/hero/${slide.photo}-tall-1080.webp`}
+                srcSet={srcSet(slide.photo, "tall", [720, 1080, 1440])}
+                sizes="100vw"
+                width={1080}
+                height={1440}
+                alt={slide.alt}
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : undefined}
+                decoding="async"
+                draggable={false}
+              />
+            </picture>
           </div>
           <p className="hero__title" role="heading" aria-level={2}>
             <span className="hero__kicker">{slide.kicker}</span>
