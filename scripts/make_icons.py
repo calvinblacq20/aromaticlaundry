@@ -8,8 +8,9 @@ is left out of everything here.
 Writes:
   public/brand/al-emblem.webp      the shirt, hanger, stack and scent on a square, for LogoMark/AppIcon
   public/brand/al-logo.webp        emblem, wordmark and tagline together (the lockup)
-  public/brand/splash-*.webp       the lockup's parts, each on the full lockup canvas so they stack
-                                   exactly; index.html animates them in one after another
+  public/brand/splash-*.webp       the lockup's parts in white for the black launch screen, each on
+                                   the full lockup canvas so they stack exactly; index.html animates
+                                   them in one after another
   public/favicon.ico, favicon-32.png, brand/al-app-icon-180.png, brand/al-app-icon-512.png
 
 Usage:  python scripts/make_icons.py
@@ -74,6 +75,19 @@ def load_layers() -> dict[str, np.ndarray]:
     return layers
 
 
+def white(layer: np.ndarray) -> np.ndarray:
+    """The logo in white for the black launch screen. Navy and gold both turn white, and each keeps
+    its gloss as a soft grey shade: navy's lightness rides on blue, gold's on green."""
+    out = layer.copy()
+    r, g, b = layer[..., 0], layer[..., 1], layer[..., 2]
+    navy = b > np.maximum(r, g) + 12
+    lightness = np.where(navy, (b - 40) / 140, (g - 110) / 100)
+    shade = 212 + 43 * np.clip(lightness, 0, 1)
+    for channel in range(3):
+        out[..., channel] = shade
+    return out
+
+
 def to_image(layer: np.ndarray) -> Image.Image:
     return Image.fromarray(layer.round().astype(np.uint8))
 
@@ -126,12 +140,11 @@ def main():
     x0, y0, x1, y1 = pad(bbox(layers, LAYERS), 6, shape)
     scale = SPLASH_WIDTH / (x1 - x0)
     size = (SPLASH_WIDTH, round((y1 - y0) * scale))
-    for name in LAYERS:
-        part = to_image(layers[name][y0:y1, x0:x1]).resize(size, Image.LANCZOS)
-        save_webp(part, BRAND / f"splash-{name}.webp")
     whole = Image.new("RGBA", size)
     for name in LAYERS:
-        whole.alpha_composite(Image.open(BRAND / f"splash-{name}.webp").convert("RGBA"))
+        crop = layers[name][y0:y1, x0:x1]
+        whole.alpha_composite(to_image(crop).resize(size, Image.LANCZOS))
+        save_webp(to_image(white(crop)).resize(size, Image.LANCZOS), BRAND / f"splash-{name}.webp")
     save_webp(whole.resize((480, round(size[1] * 480 / size[0])), Image.LANCZOS), BRAND / "al-logo.webp")
 
     # The emblem on its own, square, for the in-app marks.

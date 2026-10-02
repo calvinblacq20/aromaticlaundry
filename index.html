@@ -44,18 +44,19 @@
       href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap"
     />
     <style>
-      /* Launch screen (#splash). Inline so it paints before the app's styles and script arrive.
-         Once its images are in (.is-ready) the logo builds itself: the shirt swings onto its
-         hanger, the folded stack slides in, the name wipes on, then the tagline and the scent rise.
+      /* Launch screen (#splash): strictly black and white, the logo in white (scripts/make_icons.py).
+         Inline so it paints before the app's styles and script arrive. Once its images are in
+         (.is-ready) the logo builds itself: the shirt swings onto its hanger, the folded stack
+         slides in, the name wipes on, then the tagline and the scent rise.
          Splash in src/components/Overlays.tsx takes it down; keep SPLASH_MS there in step. */
-      #splash { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #fff; transition: opacity 0.45s cubic-bezier(0.44, 0, 0.56, 1), transform 0.45s cubic-bezier(0.44, 0, 0.56, 1); }
+      #splash { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #000; transition: opacity 0.45s cubic-bezier(0.44, 0, 0.56, 1), transform 0.45s cubic-bezier(0.44, 0, 0.56, 1); }
       #splash.is-leaving { opacity: 0; transform: scale(1.04); pointer-events: none; }
       [data-splash="off"] #splash { display: none; }
       .splash-logo { position: relative; width: min(72vw, 340px); aspect-ratio: 720 / 475; }
       .splash-logo img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
       #splash.is-ready .splash-logo img { opacity: 1; }
-      .splash-bar { position: absolute; left: 50%; bottom: calc(56px + env(safe-area-inset-bottom, 0px)); width: 120px; height: 3px; margin-left: -60px; border-radius: 3px; background: #e7ebf3; overflow: hidden; }
-      .splash-bar i { display: block; height: 100%; background: #0b2366; transform: scaleX(0); transform-origin: left; }
+      .splash-bar { position: absolute; left: 50%; bottom: calc(56px + env(safe-area-inset-bottom, 0px)); width: 120px; height: 3px; margin-left: -60px; border-radius: 3px; background: rgba(255, 255, 255, 0.14); overflow: hidden; }
+      .splash-bar i { display: block; height: 100%; background: #fff; transform: scaleX(0); transform-origin: left; }
       #splash.is-ready .splash-bar i { animation: splash-fill 3s cubic-bezier(0.44, 0, 0.56, 1) forwards; }
       [data-motion="full"] #splash.is-ready .splash-shirt { transform-origin: 48.7% 6%; animation: splash-hang 1s 0.1s ease-in-out both; }
       [data-motion="full"] #splash.is-ready .splash-stack { animation: splash-slide 0.6s 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
