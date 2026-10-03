@@ -9,7 +9,7 @@
   --hero-serif: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
   --hero-sans: var(--font);
   /* Gold from the logo: button hover sweep. */
-  --hero-accent: var(--gold);
+  --hero-accent: #f5b301;
   --hero-sheet: 24px;
   --chrome-h: 146px;
   --hero-gutter: clamp(16px, 4vw, 48px);
@@ -18,7 +18,7 @@
   /* 1% of the small viewport height; falls back to vh on browsers without svh. */
   --vh: 1vh;
   /* Set from the active slide. */
-  --hero-bg: var(--navy);
+  --hero-bg: #0b1d4a;
   --hero-ink: #f4f7fb;
   /* Small text over the photo glows in the slide's own colour, so navy text on the light slides
      reads as well as white text on the dark ones. */
@@ -295,7 +295,7 @@
 
 .hero-btn--light {
   background: #fff;
-  color: var(--navy);
+  color: #0b1d4a;
   border-color: #fff;
 }
 
@@ -313,7 +313,7 @@
 }
 
 .hero-btn--ghost:hover {
-  color: var(--navy);
+  color: #0b1d4a;
 }
 
 /* ---------- Controls: arrows + progress dots ---------- */

@@ -53,8 +53,8 @@ interface CtaProps {
   tone?: "dark" | "aqua";
 }
 
-const NAVY = "#0b1f4f";
-const GOLD = "#f5b301";
+const INK = "#242426";
+const AQUA = "#7ad7f0";
 
 /**
  * Makro's primary CTA: a button with an arrow square.
@@ -63,8 +63,8 @@ const GOLD = "#f5b301";
 export function Cta({ children, onClick, loading, disabled, type = "button", className = "", tone = "dark" }: CtaProps) {
   const [hover, setHover] = useState(false);
   const active = hover && !disabled && !loading;
-  const base = tone === "aqua" ? GOLD : NAVY;
-  const flip = tone === "aqua" ? NAVY : GOLD;
+  const base = tone === "aqua" ? AQUA : INK;
+  const flip = tone === "aqua" ? INK : AQUA;
   return (
     <motion.button
       type={type}
@@ -75,7 +75,7 @@ export function Cta({ children, onClick, loading, disabled, type = "button", cla
       onHoverStart={() => setHover(true)}
       onHoverEnd={() => setHover(false)}
       whileTap={{ scale: 0.98 }}
-      animate={{ backgroundColor: disabled ? "rgba(13, 19, 33, 0.25)" : active ? flip : base, color: (active ? flip : base) === NAVY ? "#ffffff" : NAVY }}
+      animate={{ backgroundColor: disabled ? "rgba(36, 36, 38,0.25)" : active ? flip : base, color: (active ? flip : base) === INK ? "#ffffff" : INK }}
       transition={spring.press}
       style={{ flexDirection: active ? "row-reverse" : "row" }}
     >

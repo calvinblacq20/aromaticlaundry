@@ -1,6 +1,6 @@
 # Admin (owner side) UI guidelines
 
-> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the logo's navy `#0B1F4F` for buttons, dark bands and selected states, and its gold `#F5B301` as the one accent, called `aqua` in code where the tailor build said `lime`; near-black ink `#0D1321` on cool grey `#F2F4F8`; see `src/styles/tokens.css`), the logo emblem (`src/components/Brand.tsx`), and the vocabulary:
+> **Aromatic Laundry adaptation.** This reference came from the Franz Qlodin build by way of Ruffles and Baked and Royal Hair, and this app reuses its layout, components and motion unchanged. What differs: the palette (the system's ink `#242426` on cool grey `#EBEFF5`, with aqua `#7AD7F0` from the shop's price list as the one accent, called `aqua` in code where the tailor build said `lime`; see `src/styles/tokens.css`), the logo emblem (`src/components/Brand.tsx`), and the vocabulary:
 >
 > | Tailor build | Aromatic Laundry |
 > |---|---|
@@ -44,7 +44,7 @@ The references are watermarked stock photos. Use them to study layout only; they
 | Depth | `--sh-soft` on cards, `--sh-float` on tooltips, popovers and the floating tab bar, `--sh-deep` on dialogs. |
 | Buttons | Primary action = `Cta` (dark button with a berry arrow square that swaps on hover). Secondary = `btn-outline` / `btn-soft`. Destructive = `btn-danger`, shown only inside a confirmation. |
 | Components to reuse | `Button`, `Cta`, `Dots`, `Badge`, `Avatar`, `Skeleton`/`useSkeleton`, `Sheet`, `DateStrip`, `MonthCalendar`, `CountUp`, `NotifyProvider` toasts, `SuccessScreen`, `LogoMark`/`AppIcon`, the `TopBar` pattern, `.chip`, `.segmented`, `.row`/`.list-card`, `.kv`, `.field`, `.banner`, `.empty`, `.timeline`. |
-| Brand | The Aromatic Laundry washer mark in the sidebar and tab bar. Splash stays strictly black and white. |
+| Brand | The Aromatic Laundry logo emblem in the sidebar and tab bar. Splash stays strictly black and white. |
 
 What changes: information density (desktop rows are 44px instead of 52px), a persistent sidebar on wide screens, and marketing-only scroll effects are left out (section 12).
 

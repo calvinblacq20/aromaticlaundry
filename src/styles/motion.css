@@ -121,7 +121,7 @@
 .closing {
   margin-inline: calc(var(--gutter) * -1 + 8px);
   border-radius: var(--r-24);
-  background: var(--navy);
+  background: #242426;
   color: #fff;
 }
 .bento { margin-top: 64px; padding: 48px 16px 56px; overflow: hidden; }
@@ -150,10 +150,10 @@
   color: var(--ink);
 }
 .bento-card.is-tall { min-height: 400px; }
-/* Steel cards start from navy where their white heads sit (8:1 or better behind the copy). */
-.bento-card.is-steel { background: linear-gradient(180deg, #16306e 0%, #4f6aa3 50%, #dfe6f2 100%); }
-.bento-card.is-steel-rev { background: linear-gradient(180deg, #dfe6f2 0%, #4f6aa3 55%, #16306e 100%); }
-.bento-card.is-white { background: linear-gradient(180deg, #ffffff 0%, #f2f4f8 100%); }
+/* The original steel, started deeper where the white heads sit, so the copy clears 4.5:1. */
+.bento-card.is-steel { background: linear-gradient(180deg, #3a516b 0%, #4f6884 40%, #93a4bd 70%, #e7ecf3 100%); }
+.bento-card.is-steel-rev { background: linear-gradient(180deg, #e7ecf3 0%, #93a4bd 55%, #5d7590 100%); }
+.bento-card.is-white { background: linear-gradient(180deg, #ffffff 0%, #ebeff5 100%); }
 .bento-card.is-blush { background: linear-gradient(180deg, #ffffff 0%, #fae9e6 100%); }
 .bento-card-head { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .bento-card-head h3 { font-size: 24px; line-height: 1.25; letter-spacing: -0.03em; }
@@ -202,7 +202,9 @@
   box-shadow: var(--sh-float);
 }
 
-.momo-card { margin-top: auto; padding: 12px; border-radius: var(--r-20); background: var(--navy); color: #fff; box-shadow: var(--sh-float); }
+.momo-card { margin-top: auto; padding: 12px; border-radius: var(--r-20); background: #242426; color: #fff; box-shadow: var(--sh-float); }
+/* The header line sits on the dark card itself: light grey, not the dark-ground grey (8.9:1). */
+.momo-card > .between .subtle { color: var(--white-75); }
 .momo-amount {
   margin-top: 10px;
   padding: 16px 10px;
@@ -257,7 +259,7 @@
   margin-top: 10px;
   padding: 8px 10px;
   border-radius: var(--r-12);
-  background: var(--navy);
+  background: #242426;
   color: #fff;
   font-size: 13px;
 }
@@ -311,7 +313,7 @@
   color: var(--ink);
   box-shadow: var(--sh-float);
   /* A light card inside the dark closing band: back to the deep label colours that read on white. */
-  --label-aqua: var(--royal);
+  --label-aqua: #086a87;
   --label-sand: var(--warning-ink);
   --label-sky: #1a63a8;
   --label-lilac: #5a3ec8;
@@ -356,7 +358,7 @@
 
   .highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-  .desk-nav.is-dark { background: rgba(11, 31, 79, 0.78); color: #fff; }
+  .desk-nav.is-dark { background: rgba(36, 36, 38, 0.72); color: #fff; }
   .desk-nav.is-dark .desk-brand { color: #fff; }
   .desk-nav.is-dark .desk-link { color: rgba(255, 255, 255, 0.72); }
   .desk-nav.is-dark .desk-link:hover,

@@ -38,7 +38,7 @@ Standard turnaround **24 hours**. **Express: 3 hours for +GH₵ 50.** A monthly 
 Clickable demo using sample data stored in the browser. Paystack payments, WhatsApp codes and logins are simulated: no money moves and no messages are sent.
 
 ## Design
-The house system (Makro look, Fresha structure; see `docs/design-reference.md`, `docs/structure-reference.md`, `docs/admin-ui-guidelines.md`), with this shop's colours taken from its logo. **Navy** `#0b1f4f` from the AROMATIC wordmark is the buttons, dark bands and selected states, with white text (15.9:1). **Gold** `#f5b301` from LAUNDRY and the folded stack is the one bright accent, always under dark ink (10:1). **Royal** `#1340b8` is for links and active text. Text is near-black on a crisp cool ground, with every text grey at 4.5:1 or better. The mark is the logo's emblem: a shirt on a hanger with a folded stack and the scent rising.
+The house system (Makro look, Fresha structure; see `docs/design-reference.md`, `docs/structure-reference.md`, `docs/admin-ui-guidelines.md`), with this shop's colours taken from its price list. Charcoal ink `#242426` is the text and the solid buttons, with white text on them. **Aqua** `#7ad7f0` from the water in the artwork is the one bright accent, always under dark ink (9.5:1). The ground is the system's cool grey, and every text grey clears 4.5:1 on it. The mark is the logo's emblem: a shirt on a hanger with a folded stack and the scent rising.
 
 ## Client side
 | Screen | Job |
@@ -121,5 +121,6 @@ Real authentication, live Paystack and WhatsApp (they need the server above), au
 | Express counts open hours only | Wall-clock hours | The shop closes at 9pm, so wall-clock hours would promise times nobody is there |
 | Plan covers baskets, not items | An item cap | The price list is by basket, and that's what the counter already counts |
 | Fees stored on the order | Work them out by subtraction | Plan cover, express and discounts combine, and subtraction got the breakdown wrong |
-| Navy and gold from the logo | Keep the price list's blue and aqua | They're the logo's colours, and the old palette read dull next to it |
+| Blue and aqua from the price list | Keep another build's palette | They're the shop's own colours |
+| Keep charcoal and aqua across the app, navy and gold only in the home hero | The logo's navy and gold everywhere | Tried in October 2026; the owner preferred the original look. Text greys were darkened instead, so small text still passes 4.5:1 |
 | Stills from the shop's TikTok videos | Stock photos | Video is all they've published; it's their real shop, staff and work |

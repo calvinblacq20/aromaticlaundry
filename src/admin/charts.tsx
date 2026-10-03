@@ -252,7 +252,7 @@ export function BarChart({ bars, ariaLabel, height = 150, animate = true, format
             const x0 = cx - barW / 2;
             const y0 = top + innerH - h;
             const d = `M${x0},${top + innerH}V${y0 + r}Q${x0},${y0} ${x0 + r},${y0}H${x0 + barW - r}Q${x0 + barW},${y0} ${x0 + barW},${y0 + r}V${top + innerH}Z`;
-            const color = b.closed || b.value === 0 ? "rgba(36, 36, 38,0.06)" : b.emphasis || hover === i ? "#0b1f4f" : "#58718a";
+            const color = b.closed || b.value === 0 ? "rgba(36, 36, 38,0.06)" : b.emphasis || hover === i ? "#242426" : "#58718a";
             return (
               <g key={i} onPointerEnter={() => setHover(i)}>
                 <rect x={slot * i} y={0} width={slot} height={height} fill="transparent" />
@@ -264,7 +264,7 @@ export function BarChart({ bars, ariaLabel, height = 150, animate = true, format
                   style={{ fill: color, transformOrigin: `${cx}px ${top + innerH}px`, transition: "fill 0.15s" }}
                 />
                 {b.value > 0 && !b.closed && (
-                  <text x={cx} y={y0 - 5} textAnchor="middle" style={{ fontSize: 11, fill: "#0b1f4f", fontWeight: 500 }}>
+                  <text x={cx} y={y0 - 5} textAnchor="middle" style={{ fontSize: 11, fill: "#242426", fontWeight: 500 }}>
                     {format(b.value)}
                   </text>
                 )}
@@ -307,7 +307,7 @@ export function Sparkline({ values, width = 72, height = 28, label }: { values: 
   return (
     <svg width={width} height={height} role="img" aria-label={label} style={{ flex: "none", overflow: "visible" }}>
       <path d={d} style={{ fill: "none", stroke: "#58718a", strokeWidth: 1.5, strokeLinejoin: "round", strokeLinecap: "round" }} />
-      {end && <circle cx={end[0]} cy={end[1]} r={2.5} style={{ fill: "#0b1f4f" }} />}
+      {end && <circle cx={end[0]} cy={end[1]} r={2.5} style={{ fill: "#242426" }} />}
     </svg>
   );
 }
